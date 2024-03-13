@@ -1,8 +1,9 @@
 ## Project name: QLBH VUE 3 
 This is a simple web application developed to manage product sales. The application supports basic CRUD (Create, Read, Update, Delete) operations to manage product data.
+
 ![image](https://github.com/LeHuyHieu/QLBH_Vue_3/assets/126578220/6e937a74-ebd1-41fb-bdb1-a131a92ea8e4)
 
-## Cài Đặt
+## Setup
 1. Cloning the project from the repository:
 ```
 git clone https://github.com/LeHuyHieu/QLBH_Vue_3.git
