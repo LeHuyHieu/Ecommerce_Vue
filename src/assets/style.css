@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.forms {
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    height: 85vh;
+}
+
+.register, .login {
+    width: 100%;
+}
+
+.register .card, .login .card {
+    box-shadow: 0 0 6px 2px #eeeeee;
+    border: .35rem;
+}
+
+.btn-auth {
+    display: inline-block;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    transition: .3s ease;
+    border-radius: 30rem;
+    padding: .4rem 1.5rem;
+    box-shadow: inset 0 0 0 100px #3e9bff;
+    color: #fff;
+    min-width: 130px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-auth:hover {
+    background-color: transparent;
+    color: #3e9bff;
+    box-shadow: inset 0 0 0 1px #3e9bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    color: rgb(0, 0, 220);
+}
+
+/* menu top */
+.menu-top {
+    box-shadow: 0 0 3px 2px #e9e9e9;
+}
+
+.menu-top .navbar {
+    padding-inline: 2rem;
+}
+
+.menu-top .navbar > .logo {
+    font-size: 1.7rem;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.menu-top .navbar > .logo:hover {
+    text-decoration: none;
+}
+
+.menu-top .navbar .navbar-nav .nav-link {
+    padding: .4rem .5rem;
+    position: relative;
+}
+.menu-top .navbar .navbar-nav .nav-link::before {
+    content: '';
+    position: absolute;
+    width: 30%;
+    bottom: 5px;
+    transform: translateX(-50%);
+    height: 2px;
+    background-color: #3e9bff;
+    left: 50%;
+    transition: .3s ease;
+}
+.menu-top .navbar .navbar-nav .nav-link:hover::before {
+    width: calc(100% - 1rem);
+}
+
+/* list product */
+.filter .btn-search {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+/* notification */
+.notification-group {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border: 1px solid #eaeaea;
+    border-radius: 0.25rem;
+    background-color: #fff;
+    box-shadow: 0 0 6px 0px #ececec
+}
+
+.flex {
+    display: flex;
+}
+
+/* .notification-group .icon {
+    width: 18px;
+    height: 18px;
+}
+.notification-group .icon.success > svg {
+    color: green;
+} */
