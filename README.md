@@ -5,11 +5,11 @@ This is a simple web application developed to manage product sales. The applicat
 ## Cài Đặt
 1. Cloning the project from the repository:
 ```
-git clone https://github.com/your-username/your-project.git
+git clone https://github.com/LeHuyHieu/QLBH_Vue_3.git
 ```
 2. Moving into the project directory:
 ```
-cd your-project
+cd QLBH_Vue_3
 ```
 3. Installing dependencies:
 ```
