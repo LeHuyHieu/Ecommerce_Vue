@@ -1,56 +1,44 @@
-# Vue 3 Firebase example: CRUD with Realtime Database
+## Project name: QLBH VUE 3 
+This is a simple web application developed to manage product sales. The application supports basic CRUD (Create, Read, Update, Delete) operations to manage product data.
 
-Build a Vue.js 3 Firebase CRUD example with Realtime Database, display and modify data using Axios and Vue Router.
-- Each Tutorial has id, title, description, published status.
-- We can create, retrieve, update, delete Tutorials.
+![image](https://github.com/LeHuyHieu/QLBH_Vue_3/assets/126578220/6e937a74-ebd1-41fb-bdb1-a131a92ea8e4)
 
-![vue-3-firebase-crud-example](vue-3-firebase-crud-example.png)
-
-For instruction, please visit:
-> [Vue 3 Firebase example: CRUD with Realtime Database](https://www.bezkoder.com/vue-3-firebase/)
-
-More Practice:
-> [Vue Firestore example: Buid CRUD App](https://www.bezkoder.com/vue-3-firestore/)
-
-> [Vue CRUD example with Axios and Vue Router](https://www.bezkoder.com/vue-3-crud/)
-
-> [Vue Typescript example with Axios: Build CRUD App](https://www.bezkoder.com/vue-3-typescript-axios/)
-
-> [Vue JWT Authentication and Authorization with Vuex and Vue Router](https://www.bezkoder.com/vue-3-authentication-jwt/)
-
-> [Vue Pagination with Axios and API example](https://www.bezkoder.com/vue-pagination-axios/)
-
-> [Vue File Upload example using Axios](https://www.bezkoder.com/vue-axios-file-upload/)
-
-Fullstack with Node.js Express:
-> [Vue.js + Node.js Express + MySQL](https://www.bezkoder.com/vue-js-node-js-express-mysql-crud-example/)
-
-> [Vue.js + Node.js Express + PostgreSQL](https://www.bezkoder.com/vue-node-express-postgresql/)
-
-> [Vue.js + Node.js Express + MongoDB](https://www.bezkoder.com/vue-node-express-mongodb-mevn-crud/)
-
-Fullstack with Spring Boot:
-> [Vue.js + Spring Boot](https://www.bezkoder.com/spring-boot-vue-js-crud-example/)
-
-> [Vue.js + Spring Boot + MongoDB](https://www.bezkoder.com/spring-boot-vue-mongodb/)
-
-Fullstack with Django:
-> [Vue.js + Django](https://www.bezkoder.com/django-vue-js-rest-framework/)
-
-Integration (run back-end & front-end on same server/port)
-> [Integrate Vue.js with Spring Boot](https://www.bezkoder.com/integrate-vue-spring-boot/)
-
-> [Integrate Vue App with Node.js Express](https://www.bezkoder.com/serve-vue-app-express/)
-
-## Project setup
+## Setup
+1. Cloning the project from the repository:
+```
+git clone https://github.com/LeHuyHieu/QLBH_Vue_3.git
+```
+2. Moving into the project directory:
+```
+cd QLBH_Vue_3
+```
+3. Installing dependencies:
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+4. Running the application:
 ```
 npm run serve
 ```
+
+## Technologies Used
+- Vue 3: JavaScript framework used for the user interface.
+- Firebase: Cloud service used to store product data and image files.
+- Tailwind: CSS framework used for designing the user interface.
+- Notiwind: Notification library used with Tailwind CSS (https://github.com/emmanuelsw/notiwind), ..vv
+
+## Features
+- Displaying a list of products.
+- Adding new products.
+- Editing product information.
+- Deleting a product
+- Uploading images for products.
+
+## Folder Structure
+- `src/`: Source code of the application.
+- `assets/`: Static files such as images and favicon.
+- `firebase/`: Configuration of Firebase SDK and files connecting to Firebase service
 
 ### Compiles and minifies for production
 ```
@@ -61,6 +49,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
