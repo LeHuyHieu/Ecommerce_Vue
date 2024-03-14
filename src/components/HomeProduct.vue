@@ -2,52 +2,123 @@
   <div class="home py-5">
     <div class="container-fluid">
       <h2 class="text-center text-4xl font-semibold mb-4">List Product</h2>
-      <div class="table-responsevi border p-3 rounded">
-        <div class="filter">
-          <div class="row">
-            <div class="col-md-3 col-sm-6 col-12">
-              <div class="form-group mb-3 position-relative">
-                <input type="text" class="form-control rounded-pill" placeholder="Tìm kiếm" />
-                <button class="btn btn-sm btn-search"><font-awesome-icon icon="search" /></button>
-              </div>
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg py-3">
+        <div class="flex sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center pb-4 px-3">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center pl-3 pointer-events-none">
+              <svg
+                class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
             </div>
-            <div class="col-md-3 col-sm-6 col-12 ml-auto">
-              <div class="form-group mb-3 text-right">
-                <button class="btn btn-danger rounded-pill px-3" @click="deleteAll"><font-awesome-icon icon="trash" /> All</button>
-                <button class="btn btn-danger rounded-pill px-3 ml-2" @click="deleteMultiple"><font-awesome-icon icon="trash" /> Multiple</button>
-              </div>
-            </div>
+            <input
+              type="text"
+              id="table-search"
+              class="block p-2 pl-5 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Search for items"
+            />
+          </div>
+          <div class="form-group text-right ml-auto">
+            <button
+              class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+              @click="deleteAll"
+            >
+              <font-awesome-icon icon="trash" /> All
+            </button>
+            <button
+              class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-4 py-2 ml-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+              @click="deleteMultiple"
+            >
+              <font-awesome-icon icon="trash" /> Multiple
+            </button>
           </div>
         </div>
-        <table class="table mb-0 table-bordered">
-          <thead class="thead-dark text-center">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th width="50px" class="text-center"><input type="checkbox" /></th>
-              <th width="50px" class="text-center">Id</th>
-              <th>Product name</th>
-              <th>Category name</th>
-              <th>Color</th>
-              <th width="200px">Price</th>
-              <th width="200px">Action</th>
+              <th scope="col" class="p-4">
+                <div class="flex items-center">
+                  <input
+                    id="checkbox-all-search"
+                    @change="allCheck"
+                    type="checkbox"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                </div>
+              </th>
+              <th scope="col" class="px-6 py-3">Product name</th>
+              <th scope="col" class="px-6 py-3">Category</th>
+              <th scope="col" class="px-6 py-3">Color</th>
+              <th scope="col" class="px-6 py-3">Price</th>
+              <th scope="col" width="200px" class="px-6 py-3">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in products" :key="index">
-              <td class="align-middle text-center"><input type="checkbox" @change="getKey(item.key, item.url_image)" /></td>
-              <td class="align-middle text-center">{{ index + 1 }}</td>
-              <td class="align-middle"><div class="flex items-center"><img width="50px" class="border p-1 rounded mr-2" :src="item.url_image"> {{ item.name }}</div></td>
-              <td class="text-center align-middle" :style="{ textTransform: 'capitalize' }">{{ item.category }}</td>
-              <td class="text-center align-middle">
-                <button class="btn border-2 border-light p-3" :style="{ backgroundColor: item.color }"></button>
+            <tr
+              v-for="(item, index) in products"
+              :key="index"
+              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            >
+              <td class="w-4 p-4">
+                <div class="flex items-center">
+                  <input
+                    :id="'checkbox-table-search-'+index"
+                    type="checkbox"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                </div>
               </td>
-              <td class="text-center align-middle">${{ formatPrice(item.price) }}</td>
-              <td class="text-center align-middle">
-                <router-link :to="/edit-product/ + item.key" class="btn btn-sm btn-warning"><font-awesome-icon icon="edit" /> Edit</router-link>
-                <button class="btn btn-sm btn-danger ml-2" @click="deleteItem(item.key, item.url_image)"><font-awesome-icon icon="trash" /> Delete</button>
+              <td class="align-middle px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <div class="flex items-center">
+                  <img
+                    width="50px"
+                    class="border p-1 rounded mr-2"
+                    :src="item.url_image"
+                  />
+                  {{ item.name }}
+                </div>
+              </td>
+              <td 
+                class="align-middle px-6 py-4"
+                :style="{ textTransform: 'capitalize' }">
+                {{ item.category }}
+              </td>
+              <td class="align-middle px-6 py-4">
+                <button
+                  class="btn border-2 border-light p-3"
+                  :style="{ backgroundColor: item.color }"
+                ></button>
+              </td>
+              <td class="align-middle px-6 py-4">
+                ${{ formatPrice(item.price) }}
+              </td>
+              <td class="align-middle px-6 py-4">
+                <router-link
+                  :to="/edit-product/ + item.key"
+                  class="btn btn-sm btn-warning"
+                  ><font-awesome-icon icon="edit" /> Edit</router-link
+                >
+                <button
+                  class="btn btn-sm btn-danger ml-2"
+                  @click="deleteItem(item.key, item.url_image)"
+                >
+                  <font-awesome-icon icon="trash" /> Delete
+                </button>
               </td>
             </tr>
             <tr v-if="!products.length">
-              <td colspan="6"><b>Khong co du lieu</b></td>
+              <td class="align-middle px-6 py-4" colspan="6"><b>Khong co du lieu</b></td>
             </tr>
           </tbody>
         </table>
@@ -60,22 +131,20 @@
 </template>
 <script>
 import ProductService from "../services/ProductService";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSearch, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
-import {
-  ref as firebaseRef,
-  deleteObject,
-} from "firebase/storage";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faSearch, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { ref as firebaseRef, deleteObject } from "firebase/storage";
 import { storage } from "../firebase";
-library.add(faSearch, faTrash, faEdit)
-import { notify } from "notiwind"
+
+library.add(faSearch, faTrash, faEdit);
+import { notify } from "notiwind";
 
 export default {
   data() {
     return {
       products: [],
+      url_images: [],
       keys: [],
-      url_images:[],
     };
   },
   mounted() {
@@ -83,22 +152,26 @@ export default {
   },
   methods: {
     showNotification(type, title, description) {
-      notify({
-        group: "foo",
-        title: title,
-        position: "top-center", 
-        type: type,
-        text: description
-      }, 3000);
+      notify(
+        {
+          group: "foo",
+          title: title,
+          position: "top-center",
+          type: type,
+          text: description,
+        },
+        3000
+      );
     },
-
-    //push key and url
-    getKey(key, url) {
-      this.keys.push(key);
-      this.url_images.push(url)
+    allCheck(event) {
+      const isChecked = event.target.checked;
+      const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="checkbox-table-search-"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+      });
     },
     //delete file
-    async deleteFile (url_image) {
+    async deleteFile(url_image) {
       try {
         const fileUrl = url_image;
         const fileRef = firebaseRef(storage, fileUrl);
@@ -118,65 +191,90 @@ export default {
       }
     },
     //delete all products
-    async deleteAll () {
-      const confirm = window.confirm("Are you sure you want to delete everything?");
+    async deleteAll() {
+      const confirm = window.confirm(
+        "Are you sure you want to delete everything?"
+      );
       if (confirm) {
         this.products.forEach(async (item) => {
           try {
-              //delete image by url
-              await this.deleteFile(item.url_image);
-              console.log('Deleted file successfully');
+            //delete image by url
+            await this.deleteFile(item.url_image);
+            console.log("Deleted file successfully");
           } catch (error) {
-              console.error(`Error deleting file ${error}`);
+            console.error(`Error deleting file ${error}`);
           }
         });
         try {
           //delete all products
           await ProductService.deleteAll();
-          this.showNotification("success", "Success", "Delete all product successfully")
+          this.showNotification(
+            "success",
+            "Success",
+            "Delete all product successfully"
+          );
           //get product
           this.getProductData();
         } catch (err) {
-          console.log('Error deleting all products:', err);
+          console.log("Error deleting all products:", err);
         }
       }
     },
-    //delete multiple products  
+    //delete multiple products
     async deleteMultiple() {
-      const confirm = window.confirm("Are you sure you want to delete everything?");
-      console.log(this.keys);
-      console.log(this.url_images);
+      const confirm = window.confirm(
+        "Are you sure you want to delete everything?"
+      );
       if (confirm) {
+        this.url_images = [];
+        this.keys = [];
+        this.products.forEach((item, index) => {
+          const checkbox = document.getElementById(`checkbox-table-search-${index}`);
+          if (checkbox.checked) {
+            this.url_images.push(item.url_image)
+            this.keys.push(item.key)
+          }
+        });
         this.url_images.forEach(async (url) => {
           try {
-              //delete image by url
-              await this.deleteFile(url);
-              console.log('Deleted file successfully');
+            //delete image by url
+            await this.deleteFile(url);
+            console.log("Deleted file successfully");
           } catch (error) {
-              console.error(`Error deleting file ${error}`);
+            console.error(`Error deleting file ${error}`);
           }
-        })
+        });
         try {
           //delete product by key
           await ProductService.deleteMultiple(this.keys);
-          this.showNotification("success", "Success", "Delete mutiple product successfully")
+          this.showNotification(
+            "success",
+            "Success",
+            "Delete mutiple product successfully"
+          );
           //get product
           this.getProductData();
         } catch (err) {
-          console.log('Error deleting all products:', err);
+          console.log("Error deleting all products:", err);
         }
       }
     },
     //delete item product
     async deleteItem(key, url_image) {
-      const confirm = window.confirm("Are you sure you want to delete everything?");
+      const confirm = window.confirm(
+        "Are you sure you want to delete everything?"
+      );
       if (confirm) {
         //delete image
         this.deleteFile(url_image);
         try {
           //delete product
           await ProductService.delete(key);
-          this.showNotification("success", "Success", "Delete item product successfully")
+          this.showNotification(
+            "success",
+            "Success",
+            "Delete item product successfully"
+          );
           //get product
           this.getProductData();
         } catch (err) {

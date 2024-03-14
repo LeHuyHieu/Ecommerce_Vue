@@ -1,17 +1,28 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-//bootstrap
-import 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
-//font-awesome
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import PrimeVue from 'primevue/config';
+//component
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+//bootstrap
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 //notifications
-import Notifications from 'notiwind'
-//
-import './assets/style.css'
+import Notifications from 'notiwind';
+import './assets/style.css';
+//primevue
+// import "primevue/resources/themes/aura-light-blue/theme.css";
+// import "primeicons/primeicons.css";
 
-import router from './router'
-import store from './store';
+const app = createApp(App);
 
-createApp(App).use(router).use(store).use(Notifications).component("font-awesome-icon", FontAwesomeIcon).mount('#app')
+app.use(router);
+app.use(store);
+app.use(Notifications);
+app.use(PrimeVue);
+
+app.component("font-awesome-icon", FontAwesomeIcon);
+
+app.mount('#app');
