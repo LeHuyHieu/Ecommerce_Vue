@@ -64,7 +64,7 @@ export default createStore({
                 router.push('/login')
             } catch (err) {
                 switch (err.code) {
-                    case 'auth/email-already-in-use':
+                    case 'auth/email-already-exists':
                         alerts('warning', 'Warning', 'Email đã được sử dụng.')
                         break
                     case 'auth/invalid-email':

@@ -30,10 +30,10 @@
               />
             </div>
             <div class="form-group text-right mb-3">
-              <label class="d-inline-flex align-item-center justify-content-end w-100 text-sm" for="agree"><input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" id="agree" /> I agree to all terms</label>
+              <label class="d-inline-flex align-item-center justify-content-end w-100 text-sm" for="agree"><input @change="changeAgree" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2" id="agree" /> I agree to all terms</label>
             </div>
             <div class="text-center mb-4">
-              <button class="btn-auth">Register</button>
+              <button class="btn-auth" :disabled="!agree">Register</button>
             </div>
             <hr />
             <div class="text-center mt-4">
@@ -54,6 +54,12 @@ export default {
   setup() {
     const register_form = ref({});
     const store = useStore();
+    const agree = ref(false);
+    console.log(agree);
+
+    const changeAgree = () => {
+      agree.value = !agree.value;
+    };
 
     const register = () => {
       store.dispatch("register", register_form.value);
@@ -62,6 +68,8 @@ export default {
     return {
       register_form,
       register,
+      agree,
+      changeAgree
     };
   },
 };

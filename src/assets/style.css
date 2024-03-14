@@ -37,12 +37,21 @@
     text-align: center;
     text-decoration: none;
 }
+.btn-auth:disabled {
+    box-shadow: inset 0 0 0 100px #56a8ff;
+}
 
 .btn-auth:hover {
     background-color: transparent;
     color: #3e9bff;
     box-shadow: inset 0 0 0 1px #3e9bff;
     text-decoration: none;
+}
+
+.btn-auth:disabled:hover {
+    cursor: not-allowed;
+    box-shadow: inset 0 0 0 100px #56a8ff;
+    color: #fff;
 }
 
 a:hover {
