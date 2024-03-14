@@ -27,6 +27,16 @@
               placeholder="Search for items"
             />
           </div>
+          <div class="form-group ml-2">
+            <select @change="changeItemPerPage($event.target.value)" v-model="itemsPerPage" class="block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+              <option value="2">Choose..</option>
+              <option value="5">05</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+            </select>
+          </div>
           <div class="form-group text-right ml-auto">
             <button
               class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
@@ -296,7 +306,7 @@ export default {
   setup() {
     const productsAll = ref([]);
     const currentPage = ref(1);
-    const itemsPerPage = 2;
+    const itemsPerPage = ref(2);
 
     const getProductData = async () => {
       try {
@@ -307,11 +317,11 @@ export default {
       }
     };
 
-    const totalPages = computed(() => Math.ceil(productsAll.value.length / itemsPerPage));
+    const totalPages = computed(() => Math.ceil(productsAll.value.length / itemsPerPage.value));
 
     const paginatedItems = computed(() => {
-      const startIndex = (currentPage.value - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
+      const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+      const endIndex = startIndex + itemsPerPage.value;
       return productsAll.value.slice(startIndex, endIndex);
     });
 
@@ -330,6 +340,11 @@ export default {
     const getPage = (page) => {
       currentPage.value = page;
     };
+
+    const changeItemPerPage = (perPage) => {
+      console.log(perPage);
+      itemsPerPage.value = perPage
+    }
     
     onMounted(async () => {
       await getProductData();
@@ -344,6 +359,7 @@ export default {
       nextPage,
       prevPage,
       getPage,
+      changeItemPerPage,
     };
   }
 };
