@@ -13,6 +13,7 @@
                 type="email"
                 class="block p-2 pl-5 text-sm rounded-full text-gray-900 border border-gray-300 rounded-lg w-full focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter Email"
+                @input="changeInput"
                 v-model="login_form.email"
               />
             </div>
@@ -22,6 +23,7 @@
                 type="password"
                 class="block p-2 pl-5 text-sm rounded-full text-gray-900 border border-gray-300 rounded-lg w-full focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter password"
+                @input="changeInput"
                 v-model="login_form.password"
               />
             </div>
@@ -29,7 +31,7 @@
               <a class="text-blue-600 text-xs">Forgot passsword?</a>
             </p>
             <div class="text-center mb-4">
-              <button type="submit" class="btn-auth">Login</button>
+              <button type="submit" class="btn-auth" :disabled="!allowSubmit">Login</button>
             </div>
             <hr />
             <div class="text-center mt-4">
@@ -51,6 +53,15 @@ export default {
   setup() {
     const login_form = ref({});
     const store = useStore();
+    const allowSubmit = ref(false);
+
+    const changeInput = () => {
+      if (login_form.value.email && login_form.value.password) {
+        allowSubmit.value = true;
+      }else {
+        allowSubmit.value = false;
+      }
+    }
 
     const login = () => {
       store.dispatch('login', login_form.value)
@@ -58,8 +69,9 @@ export default {
 
     return {
       login_form,
-      // store,
       login,
+      allowSubmit,
+      changeInput
     };
   },
 };

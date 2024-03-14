@@ -41,16 +41,30 @@
           <div class="form-group text-right ml-auto">
             <button
               class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-              @click="deleteAll"
+              @click="showModalDeleteAll"
             >
               <font-awesome-icon icon="trash" /> All
             </button>
+            <confirm-delete-modal
+              :show="showDeleteAllModal"
+              title="Confirm Deletion"
+              message="Are you sure you want to delete all products?"
+              @close="hideModalDeleteAll"
+              @delete="deleteAll"
+            />
             <button
               class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-4 py-2 ml-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-              @click="deleteMultiple"
+              @click="showModalDeleteMutiple"
             >
               <font-awesome-icon icon="trash" /> Multiple
             </button>
+            <confirm-delete-modal
+              :show="showDeleteMutipleModal"
+              title="Confirm Deletion"
+              message="Are you sure you want to delete the selected products?"
+              @close="hideModalDeleteMutiple"
+              @delete="deleteMultiple"
+            />
           </div>
         </div>
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -122,10 +136,17 @@
                 >
                 <button
                   class="btn btn-sm hover:text-red-600 ml-2"
-                  @click="deleteItem(item.key, item.url_image)"
+                  @click="showModalDeleteItem"
                 >
                   <font-awesome-icon icon="trash" /> Delete
                 </button>
+                <confirm-delete-modal
+                  :show="showDeleteItemModal"
+                  title="Confirm Deletion"
+                  message="Are you sure you want to delete the current product?"
+                  @close="hideModalDeleteItem"
+                  @delete="deleteItem(item.key, item.url_image)"
+                />
               </td>
             </tr>
             <tr v-if="!paginatedItems.length">
@@ -153,55 +174,6 @@
   <!-- <div>
     <button @click="showNotification" class="bg-blue-500">Show Notification</button>
   </div> -->
-  <!-- model confirm delete -->
-  <!-- <div id="YOUR_ID" class="fixed z-50 inset-0 overflow-y-auto">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-        </div>
-        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
-            role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-            <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
-                <button type="button" data-behavior="cancel" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <span class="sr-only">Close</span>
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <div class="sm:flex sm:items-start">
-                <div
-                    class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                    <svg class="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                </div>
-                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                        Your Confirmation Message
-                    </h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500">
-                            Your body text goes here.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                <button type="button" data-behavior="commit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                    Commit
-                </button>
-                <button type="button" data-behavior="cancel" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm">
-                    Cancel
-                </button>
-            </div>
-        </div>
-      </div>
-    </div> -->
-  <!-- end model confirm delete -->
 </template>
 <script>
 import { ref, computed, onMounted } from 'vue';
@@ -210,22 +182,45 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSearch, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { ref as firebaseRef, deleteObject } from "firebase/storage";
 import { storage } from "../firebase";
+import ConfirmDeleteModal from './ConfirmDelete.vue';
 
 library.add(faSearch, faTrash, faEdit);
 import { notify } from "notiwind";
 
 export default {
+  components: {ConfirmDeleteModal},
   data() {
     return {
       products: [],
       url_images: [],
       keys: [],
+      showDeleteAllModal: false,
+      showDeleteMutipleModal: false,
+      showDeleteItemModal: false,
     };
   },
   // mounted() {
   //   this.getProductData();
   // },
   methods: {
+    showModalDeleteAll() {
+      this.showDeleteAllModal = true;
+    },
+    hideModalDeleteAll() {
+      this.showDeleteAllModal = false;
+    },
+    showModalDeleteMutiple() {
+      this.showDeleteMutipleModal = true;
+    },
+    hideModalDeleteMutiple() {
+      this.showDeleteMutipleModal = false;
+    },
+    showModalDeleteItem() {
+      this.showDeleteItemModal = true;
+    },
+    hideModalDeleteItem() {
+      this.showDeleteItemModal = false;
+    },
     showNotification(type, title, description) {
       notify(
         {
@@ -259,7 +254,7 @@ export default {
     //delete all products
     async deleteAll() {
       const confirm = window.confirm(
-        "Are you sure you want to delete everything?"
+        "Are you sure you want to delete all products?"
       );
       if (confirm) {
         this.products.forEach(async (item) => {
@@ -289,7 +284,7 @@ export default {
     //delete multiple products
     async deleteMultiple() {
       const confirm = window.confirm(
-        "Are you sure you want to delete everything?"
+        "Are you sure you want to delete the selected products?"
       );
       if (confirm) {
         this.url_images = [];
@@ -328,7 +323,7 @@ export default {
     //delete item product
     async deleteItem(key, url_image) {
       const confirm = window.confirm(
-        "Are you sure you want to delete everything?"
+        "Are you sure you want to delete the current product?"
       );
       if (confirm) {
         //delete image
