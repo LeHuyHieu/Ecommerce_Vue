@@ -25,6 +25,7 @@
               id="table-search"
               class="block p-2 pl-5 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Search for items"
+              @input="handleSearch"
             />
           </div>
           <div class="form-group ml-2">
@@ -307,6 +308,7 @@ export default {
     const productsAll = ref([]);
     const currentPage = ref(1);
     const itemsPerPage = ref(2);
+    const searchText = ref('');
 
     const getProductData = async () => {
       try {
@@ -318,11 +320,19 @@ export default {
     };
 
     const totalPages = computed(() => Math.ceil(productsAll.value.length / itemsPerPage.value));
+    
+    const handleSearch = (event) => {
+      searchText.value = event.target.value;
+    };
 
     const paginatedItems = computed(() => {
+      const term = searchText.value.toLowerCase();
       const startIndex = (currentPage.value - 1) * itemsPerPage.value;
       const endIndex = startIndex + itemsPerPage.value;
-      return productsAll.value.slice(startIndex, endIndex);
+      const filteredItems = productsAll.value.filter(product => {
+        return product.name.toLowerCase().includes(term) || product.category.toLowerCase().includes(term);
+      });
+      return filteredItems.slice(startIndex, endIndex);
     });
 
     const nextPage = () => {
@@ -360,6 +370,7 @@ export default {
       prevPage,
       getPage,
       changeItemPerPage,
+      handleSearch
     };
   }
 };
