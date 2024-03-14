@@ -65,7 +65,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="(item, index) in products"
+              v-for="(item, index) in paginatedItems"
               :key="index"
               class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
@@ -117,12 +117,26 @@
                 </button>
               </td>
             </tr>
-            <tr v-if="!products.length">
+            <tr v-if="!paginatedItems.length">
               <td class="align-middle px-6 py-4" colspan="6"><b>Khong co du lieu</b></td>
             </tr>
           </tbody>
         </table>
       </div>
+      <nav class="flex items-center sm:flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+          <span class="text-sm font-normal text-gray-500 dark:text-gray-400 sm:mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span class="font-semibold text-gray-900 dark:text-white">{{(currentPage - 1) * itemsPerPage + 1}}-{{Math.min(currentPage * itemsPerPage, productsAll.length)}}</span> of <span class="font-semibold text-gray-900 dark:text-white">{{productsAll.length}}</span></span>
+          <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+              <li>
+                  <a @click="prevPage" href="javascript:;" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 border rounded-l border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+              </li>
+              <li v-for="(page, index) in totalPages" :key="index">
+                  <a @click="getPage(page)" href="javascript:;" class="flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" :class="page == currentPage ? 'text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'" >{{page}}</a>
+              </li>
+              <li>
+                <a @click="nextPage" href="javascript:;" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 border border-gray-300 rounded-r rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+              </li>
+          </ul>
+      </nav>
     </div>
   </div>
   <!-- <div>
@@ -130,6 +144,7 @@
   </div> -->
 </template>
 <script>
+import { ref, computed, onMounted } from 'vue';
 import ProductService from "../services/ProductService";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSearch, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -147,9 +162,9 @@ export default {
       keys: [],
     };
   },
-  mounted() {
-    this.getProductData();
-  },
+  // mounted() {
+  //   this.getProductData();
+  // },
   methods: {
     showNotification(type, title, description) {
       notify(
@@ -179,15 +194,6 @@ export default {
         console.log("delete file successfully");
       } catch (error) {
         console.error("error delete file:", error);
-      }
-    },
-    //get all products
-    async getProductData() {
-      try {
-        const products = await ProductService.getAll();
-        this.products = products;
-      } catch (error) {
-        console.error("Error getting product data:", error);
       }
     },
     //delete all products
@@ -287,6 +293,59 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     },
   },
+  setup() {
+    const productsAll = ref([]);
+    const currentPage = ref(1);
+    const itemsPerPage = 2;
+
+    const getProductData = async () => {
+      try {
+        const products = await ProductService.getAll();
+        productsAll.value = products;
+      } catch (error) {
+        console.error("Error getting product data:", error);
+      }
+    };
+
+    const totalPages = computed(() => Math.ceil(productsAll.value.length / itemsPerPage));
+
+    const paginatedItems = computed(() => {
+      const startIndex = (currentPage.value - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      return productsAll.value.slice(startIndex, endIndex);
+    });
+
+    const nextPage = () => {
+      if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+      }
+    };
+
+    const prevPage = () => {
+      if (currentPage.value > 1) {
+        currentPage.value--;
+      }
+    };
+
+    const getPage = (page) => {
+      currentPage.value = page;
+    };
+    
+    onMounted(async () => {
+      await getProductData();
+    });
+
+    return {
+      productsAll,
+      currentPage,
+      totalPages,
+      paginatedItems,
+      itemsPerPage,
+      nextPage,
+      prevPage,
+      getPage,
+    };
+  }
 };
 </script>
 <style lang=""></style>
