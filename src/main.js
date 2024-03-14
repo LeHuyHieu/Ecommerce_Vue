@@ -7,8 +7,8 @@ import PrimeVue from 'primevue/config';
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 //bootstrap
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 //notifications
 import Notifications from 'notiwind';
 import './assets/style.css';

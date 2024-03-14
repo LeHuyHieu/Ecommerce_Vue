@@ -2,6 +2,20 @@ import { createStore } from "vuex"
 import router from "../router"
 import { auth } from "../firebase"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
+import { notify } from "notiwind";
+
+const alerts = (type, title, desc) => {
+    notify(
+        {
+            group: "foo",
+            title: title,
+            position: "top-center",
+            type: type,
+            text: desc,
+        },
+        3000
+    );
+}
 
 export default createStore({
     state: {
@@ -11,7 +25,7 @@ export default createStore({
         SET_USER(state, user) {
             state.user = user
         },
-        
+
         CLEAR_USER(state) {
             state.user = null
         },
@@ -23,17 +37,18 @@ export default createStore({
                 await signInWithEmailAndPassword(auth, email, password)
                 commit('SET_USER', auth.currentUser)
                 localStorage.setItem('user', JSON.stringify(auth.currentUser));
+                alerts('success', 'Success', 'Đăng nhập thành công.')
                 router.push('/')
             } catch (err) {
                 switch (err.code) {
                     case 'auth/user-not-found':
-                        alert('user not found')
+                        alerts('error', 'Error', 'Tài khoản không tồn tại.')
                         break
                     case 'auth/wrong-password':
-                        alert('wrong password')
+                        alerts('error', 'Error', 'Sai tài khoản hoặc mật khẩu.')
                         break
                     default:
-                        alert('something went wrong')
+                        alerts('error', 'Error', 'Có sự cố sảy ra.')
                         break
                 }
             }
@@ -44,24 +59,25 @@ export default createStore({
             try {
                 await createUserWithEmailAndPassword(auth, email, password)
                 commit('SET_USER', auth.currentUser)
-                localStorage.setItem('user', JSON.stringify(auth.currentUser));
-                router.push('/')
+                // localStorage.setItem('user', JSON.stringify(auth.currentUser));
+                alerts('success', 'Success', 'Đăng ký thành công.')
+                router.push('/login')
             } catch (err) {
                 switch (err.code) {
                     case 'auth/email-already-in-use':
-                        alert('email already in use')
+                        alerts('warning', 'Warning', 'Email đã được sử dụng.')
                         break
                     case 'auth/invalid-email':
-                        alert('invalid email')
+                        alerts('warning', 'Warning', 'Email không hợp lệ.')
                         break
                     case 'auth/operation-not-allowed':
-                        alert('operation-not-allowed');
+                        alerts('error', 'Error', 'Hoạt động không được phép.');
                         break
                     case 'auth/weak-password':
-                        alert('weak password')
+                        alerts('error', 'Error', 'Mật khẩu yếu.')
                         break
                     default:
-                        alert('something went wrong')
+                        alerts('error', 'Error', 'Có sự cố sảy ra.')
                         break
                 }
             }

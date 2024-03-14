@@ -1,8 +1,8 @@
 <template lang="">
   <div class="home py-5">
-    <div class="container-fluid">
+    <div class="container-fluid px-5">
       <h2 class="text-center text-4xl font-semibold mb-4">List Product</h2>
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg py-3">
+      <div class="relative overflow-x-auto border shadow-md sm:rounded-lg py-3">
         <div class="flex sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center pb-4 px-3">
           <div class="relative">
             <div class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center pl-3 pointer-events-none">
@@ -23,13 +23,13 @@
             <input
               type="text"
               id="table-search"
-              class="block p-2 pl-5 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Search for items"
               @input="handleSearch"
             />
           </div>
-          <div class="form-group ml-2">
-            <select @change="changeItemPerPage($event.target.value)" v-model="itemsPerPage" class="block w-full rounded-md border py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+          <div class="form-group ml-2 w-44">
+            <select @change="changeItemPerPage($event.target.value)" v-model="itemsPerPage" class="block w-full border border-gray-300 bg-gray-50 rounded-md py-1.5 text-gray-900 shadow-sm focus:ring-1 focus:ring-inset focus:ring-indigo-600">
               <option value="2">Choose..</option>
               <option value="5">05</option>
               <option value="10">10</option>
@@ -107,7 +107,7 @@
               </td>
               <td class="align-middle px-6 py-4">
                 <button
-                  class="btn border-2 border-light p-3"
+                  class="btn border-2 rounded-full border-light p-2"
                   :style="{ backgroundColor: item.color }"
                 ></button>
               </td>
@@ -121,7 +121,7 @@
                   ><font-awesome-icon icon="edit" /> Edit</router-link
                 >
                 <button
-                  class="btn btn-sm btn-danger ml-2"
+                  class="btn btn-sm hover:text-red-600 ml-2"
                   @click="deleteItem(item.key, item.url_image)"
                 >
                   <font-awesome-icon icon="trash" /> Delete
@@ -153,6 +153,55 @@
   <!-- <div>
     <button @click="showNotification" class="bg-blue-500">Show Notification</button>
   </div> -->
+  <!-- model confirm delete -->
+  <!-- <div id="YOUR_ID" class="fixed z-50 inset-0 overflow-y-auto">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
+            role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+            <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
+                <button type="button" data-behavior="cancel" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <span class="sr-only">Close</span>
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="sm:flex sm:items-start">
+                <div
+                    class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <svg class="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                        Your Confirmation Message
+                    </h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">
+                            Your body text goes here.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                <button type="button" data-behavior="commit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    Commit
+                </button>
+                <button type="button" data-behavior="cancel" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm">
+                    Cancel
+                </button>
+            </div>
+        </div>
+      </div>
+    </div> -->
+  <!-- end model confirm delete -->
 </template>
 <script>
 import { ref, computed, onMounted } from 'vue';

@@ -1,33 +1,7 @@
 <template>
   <div id="app">
     <div class="position-sticky menu-top">
-      <nav class="navbar navbar-expand">
-        <router-link to="/" class="logo">Limupa</router-link>
-        <ul class="navbar-nav ml-auto" v-if="$store.state.user">
-          <li class="nav-item">
-            <router-link to="/list-product" class="nav-link"
-              >List Product</router-link
-            >
-          </li>
-          <li class="nav-item">
-            <router-link to="/add-product" class="nav-link"
-              >Add Product</router-link
-            >
-          </li>
-          <li class="nav-item">
-            <button class="btn-auth active" @click="$store.dispatch('logout')">
-              Logout
-            </button>
-          </li>
-        </ul>
-        <ul class="navbar-nav ml-auto" v-if="!$store.state.user">
-          <li class="nav-item">
-            <router-link class="btn-auth" to="/login">
-              Login / SignUp
-            </router-link>
-          </li>
-        </ul>
-      </nav>
+      <Navbar />
     </div>
     <!-- NotificationGroup -->
     <NotificationGroup group="foo">
@@ -102,14 +76,12 @@
 </template>
 
 <script>
-import { onBeforeMount } from "vue";
-import { useStore } from "vuex";
+import Navbar from "./components/Navbar.vue";
 
 export default {
   name: "app",
+  components: {Navbar},
   setup() {
-    const store = useStore();
-
     const notificationIcons = {
       success: require('@/assets/icon/done.svg'),
       info: require('@/assets/icon/info.svg'),
@@ -117,12 +89,7 @@ export default {
       error: require('@/assets/icon/error.svg')
     };
 
-    onBeforeMount(() => {
-      store.dispatch("fetchUser");
-    });
-
     return {
-      user: store.state.user,
       notificationIcons,
     };
   },
