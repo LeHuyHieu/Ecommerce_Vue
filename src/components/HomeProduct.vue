@@ -318,6 +318,11 @@ export default {
         console.error("Error getting product data:", error);
       }
     };
+    
+    const changeItemPerPage = (perPage) => {
+      console.log(perPage);
+      itemsPerPage.value = perPage
+    }
 
     const totalPages = computed(() => Math.ceil(productsAll.value.length / itemsPerPage.value));
     
@@ -325,10 +330,11 @@ export default {
       searchText.value = event.target.value;
     };
 
+    
     const paginatedItems = computed(() => {
       const term = searchText.value.toLowerCase();
       const startIndex = (currentPage.value - 1) * itemsPerPage.value;
-      const endIndex = startIndex + itemsPerPage.value;
+      const endIndex = currentPage.value * itemsPerPage.value;
       const filteredItems = productsAll.value.filter(product => {
         return product.name.toLowerCase().includes(term) || product.category.toLowerCase().includes(term);
       });
@@ -350,11 +356,6 @@ export default {
     const getPage = (page) => {
       currentPage.value = page;
     };
-
-    const changeItemPerPage = (perPage) => {
-      console.log(perPage);
-      itemsPerPage.value = perPage
-    }
     
     onMounted(async () => {
       await getProductData();
