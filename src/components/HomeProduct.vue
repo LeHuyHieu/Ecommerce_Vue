@@ -320,17 +320,23 @@ export default {
     };
     
     const changeItemPerPage = (perPage) => {
-      console.log(perPage);
       itemsPerPage.value = perPage
+      currentPage.value = 1;
     }
-
-    const totalPages = computed(() => Math.ceil(productsAll.value.length / itemsPerPage.value));
     
     const handleSearch = (event) => {
       searchText.value = event.target.value;
+      currentPage.value = 1;
     };
 
-    
+    const totalPages = computed(() => {
+      const term = searchText.value.toLowerCase();
+      const filteredItems = productsAll.value.filter(product => {
+        return product.name.toLowerCase().includes(term) || product.category.toLowerCase().includes(term);
+      });
+      return Math.ceil(filteredItems.length / itemsPerPage.value);
+    });
+
     const paginatedItems = computed(() => {
       const term = searchText.value.toLowerCase();
       const startIndex = (currentPage.value - 1) * itemsPerPage.value;
@@ -356,7 +362,7 @@ export default {
     const getPage = (page) => {
       currentPage.value = page;
     };
-    
+
     onMounted(async () => {
       await getProductData();
     });
