@@ -5,10 +5,20 @@ const routes = [
     path: "/",
     alias: "/home",
     name: "home",
+    component: () => import("./components/Home.vue")
+  },
+  {
+    path: "/detail-product/:id",
+    name: "detail-product",
+    component: () => import("./components/DetailProduct.vue")
+  },
+  {
+    path: "/cart",
+    name: "cart",
     meta: {
       requiresAuth: true
     },
-    component: () => import("./components/HomeProduct")
+    component: () => import("./components/CartPage.vue")
   },
   {
     path: "/list-product",

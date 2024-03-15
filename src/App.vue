@@ -1,7 +1,14 @@
 <template>
   <div id="app">
-    <div class="position-sticky menu-top">
-      <Navbar />
+    <div>
+      <!-- <CartLeft /> -->
+      <header class="position-sticky menu-top">
+        <Navbar />
+      </header>
+      <router-view />
+      <footer>
+        <Footer />
+      </footer>
     </div>
     <!-- NotificationGroup -->
     <NotificationGroup group="foo">
@@ -71,16 +78,17 @@
       </div>
     </NotificationGroup>
     <!-- NotificationGroup -->
-    <router-view />
   </div>
 </template>
 
 <script>
-import Navbar from "./components/Navbar.vue";
+import Navbar from "./components/layouts/Navbar.vue";
+import Footer from "./components/layouts/Footer.vue";
+// import CartLeft from "./components/CartLeft.vue";
 
 export default {
   name: "app",
-  components: {Navbar},
+  components: {Navbar, Footer},
   setup() {
     const notificationIcons = {
       success: require('@/assets/icon/done.svg'),
@@ -96,5 +104,5 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
+<style lang="css">
 </style>
