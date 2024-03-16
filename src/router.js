@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+import AuthService from "./services/AuthService";
 
 const routes = [
   {
@@ -65,14 +66,14 @@ const router = createRouter({
 
 // kiểm tra đăng nhập
 router.beforeEach((to, from, next) => {
-  const user = localStorage.getItem('user');
+  let isLogin  = AuthService.isLogin()
 
-  if (to.path === '/login' && user) {
+  if (to.path === '/login' && isLogin) {
     next('/')
     return
   }
 
-  if (to.matched.some(record => record.meta.requiresAuth) && !user) {
+  if (to.matched.some(record => record.meta.requiresAuth) && !isLogin) {
     next('/login')
     return
   }
