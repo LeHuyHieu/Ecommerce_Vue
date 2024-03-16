@@ -1,10 +1,10 @@
 <template lang="">
   <div class="home py-10">
     <div class="container mx-auto">
-      <div class="lg:w-4/5 mx-auto">
-        <h2 class="text-3xl font-semibold mb-5">Home</h2>
-        <div class="grid grid-cols-4 gap-y-16 gap-x-6">
-        <div class="card" v-for="(product, index) in productsAll" :key="index">
+      <div class="lg:w-11/12 mx-auto">
+        <h2 class="text-3xl text-center sm:text-left font-semibold mb-5">Home</h2>
+        <div class="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-y-16 gap-x-6">
+        <div class="card mx-auto" v-for="(product, index) in productsAll" :key="index">
           <div
             class="w-full max-w-sm bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700"
           >

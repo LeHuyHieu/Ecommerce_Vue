@@ -1,11 +1,11 @@
 <template lang="">
   <div class="py-10">
     <!-- component -->
-    <section class="text-gray-700 body-font overflow-hidden bg-white">
+    <section class="text-gray-700 body-font bg-white">
       <div class="container mx-auto">
-        <div class="lg:w-4/5 mx-auto">
-          <h2 class="text-3xl font-semibold mb-5">Detail product</h2>
-          <div class="flex flex-wrap">
+        <div class="lg:w-11/12 mx-auto">
+          <h2 class="text-3xl text-center sm:text-left font-semibold mb-5">Detail product</h2>
+          <div class="flex flex-wrap px-5 sm:px-0">
             <div
               class="lg:w-5/12 p-10 w-full shadow-md rounded-md border border-gray-100"
             >
@@ -142,15 +142,15 @@
                   ></button>
                 </div>
               </div>
-              <div class="flex justify-between items-center">
-                <span class="title-font font-medium text-2xl text-gray-900"
+              <div class="block justify-between items-center sm:flex">
+                <span class="title-font mb-4 inline-block sm:inline sm:mb-0 font-medium text-2xl text-gray-900"
                   >${{ $helpers.formatPrice(product.price) }}</span
                 >
-                <div>
-                  <input type="number" class="w-20 rounded-md border border-gray-300 shadow text-center" v-model="product.quantity" min="1" value="1" />
+                <div class="flex sm:block flex-wrap items-center">
+                  <input type="number" class="w-full sm:w-24 mr-2 mb-2 sm:mb-0 sm:w-20 rounded-md border border-gray-300 shadow text-center" v-model="product.quantity" min="1" value="1" />
                   <button
                     @click="$helpers.addToCart(product)"
-                    class="w-full shadow-md rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    class="w-full sm:w-fit mb-2 sm:mb-0 shadow-md rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-auto sm:ml-3 sm:w-auto sm:text-sm"
                   >
                     <font-awesome-icon icon="shopping-cart" /> Add to cart
                   </button>

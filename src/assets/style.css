@@ -12,11 +12,13 @@
     height: 85vh;
 }
 
-.register, .login {
+.register,
+.login {
     width: 100%;
 }
 
-.register .card, .login .card {
+.register .card,
+.login .card {
     box-shadow: 0 0 6px 2px #eeeeee;
     border: .35rem;
 }
@@ -37,6 +39,7 @@
     text-align: center;
     text-decoration: none;
 }
+
 .btn-auth:disabled {
     box-shadow: inset 0 0 0 100px #56a8ff;
 }
@@ -68,13 +71,13 @@ a:hover {
     padding-inline: 2rem;
 }
 
-.menu-top .navbar > .logo {
+.menu-top .navbar>.logo {
     font-size: 1.7rem;
     font-weight: 600;
     font-style: italic;
 }
 
-.menu-top .navbar > .logo:hover {
+.menu-top .navbar>.logo:hover {
     text-decoration: none;
 }
 
@@ -82,6 +85,7 @@ a:hover {
     padding: .4rem .5rem;
     position: relative;
 }
+
 .menu-top .navbar .navbar-nav .nav-link::before {
     content: '';
     position: absolute;
@@ -93,6 +97,7 @@ a:hover {
     left: 50%;
     transition: .3s ease;
 }
+
 .menu-top .navbar .navbar-nav .nav-link:hover::before {
     width: calc(100% - 1rem);
 }
@@ -118,4 +123,15 @@ a:hover {
 
 .flex {
     display: flex;
+}
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 }

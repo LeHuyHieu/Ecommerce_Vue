@@ -6,6 +6,11 @@ class Helper {
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
+    getCart() {
+        let carts = JSON.parse(localStorage.getItem('carts'))
+        return carts ? carts : [];
+    }
+
     addToCart(cart) {
         let carts = JSON.parse(localStorage.getItem('carts')) || [];
         let flag = false;
@@ -23,7 +28,6 @@ class Helper {
                 return;
             }
         });
-        console.log(carts);
         if (!flag) {
             cart.quantity = cart.quantity ? cart.quantity : 1;
             notify({
@@ -36,6 +40,19 @@ class Helper {
             carts.push(cart);
         }
         localStorage.setItem('carts', JSON.stringify(carts));
+    }
+
+    removeCart(id) {
+        console.log(id);
+        let carts = JSON.parse(localStorage.getItem("carts"));
+        for (let i = 0; i < carts.length; i++) {
+            if (i == id) {
+                carts.splice(i, 1);
+            }
+        }
+        carts = JSON.stringify(carts);
+        localStorage.setItem("carts", carts);
+        this.getCart();
     }
 }
 
