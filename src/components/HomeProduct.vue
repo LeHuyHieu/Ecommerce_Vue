@@ -126,7 +126,7 @@
                 ></button>
               </td>
               <td class="align-middle px-6 py-4">
-                ${{ formatPrice(item.price) }}
+                ${{ $helpers.formatPrice(item.price) }}
               </td>
               <td class="align-middle px-6 py-4">
                 <router-link
@@ -199,9 +199,6 @@ export default {
       showDeleteItemModal: false,
     };
   },
-  // mounted() {
-  //   this.getProductData();
-  // },
   methods: {
     showModalDeleteAll() {
       this.showDeleteAllModal = true;
@@ -274,6 +271,7 @@ export default {
             "Success",
             "Delete all product successfully"
           );
+          this.showDeleteAllModal = false;
           //get product
           this.getProductData();
         } catch (err) {
@@ -313,6 +311,7 @@ export default {
             "Success",
             "Delete mutiple product successfully"
           );
+          this.showDeleteMutipleModal = false;
           //get product
           this.getProductData();
         } catch (err) {
@@ -336,17 +335,14 @@ export default {
             "Success",
             "Delete item product successfully"
           );
+          this.showDeleteItemModal = false;
           //get product
           this.getProductData();
         } catch (err) {
           console.error("Error deleting item:", err);
         }
       }
-    },
-    formatPrice(value) {
-      let val = (value / 1).toFixed(2).replace(".", ",");
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    },
+    }
   },
   setup() {
     const productsAll = ref([]);
@@ -421,9 +417,10 @@ export default {
       prevPage,
       getPage,
       changeItemPerPage,
-      handleSearch
+      handleSearch,
+      getProductData 
     };
-  }
+  },
 };
 </script>
 <style lang=""></style>

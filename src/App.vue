@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <div>
       <!-- <CartLeft /> -->
       <header class="position-sticky menu-top">

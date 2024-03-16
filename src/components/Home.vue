@@ -25,7 +25,7 @@
                 {{product.desc}}
               </p>
               <div class="flex items-center justify-between mt-2.5 mb-5">
-                <span class="text-3xl inline-block font-bold text-gray-900 dark:text-white">${{product.price}}</span>
+                <span class="text-lg inline-block font-bold text-gray-900 dark:text-white">${{$helpers.formatPrice(product.price)}}</span>
                 <div class="flex items-center">
                   <div class="flex items-center space-x-1 rtl:space-x-reverse">
                     <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
@@ -83,11 +83,9 @@ export default {
 
     onMounted(async () => {
       await getProductData();
-      console.log(productsAll.value);
     });
 
     return {
-      getProductData,
       productsAll
     }
   }

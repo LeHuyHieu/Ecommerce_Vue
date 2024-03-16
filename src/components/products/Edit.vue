@@ -117,6 +117,11 @@ export default {
     const categories = ref({
       mobile: "Mobile",
       laptop: "Laptop",
+      apple_watch: "Apple Watch",
+      iphone: "iPhone",
+      oppo: "Oppo",
+      android: "Android",
+      ios: "IOS",
     });
     
     const router = useRouter();
