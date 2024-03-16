@@ -177,11 +177,11 @@
 </template>
 <script>
 import { ref, computed, onMounted } from 'vue';
-import ProductService from "../services/ProductService";
+import ProductService from "@/services/ProductService";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSearch, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { ref as firebaseRef, deleteObject } from "firebase/storage";
-import { storage } from "../firebase";
+import { storage } from "@/firebase";
 import ConfirmDeleteModal from './ConfirmDelete.vue';
 
 library.add(faSearch, faTrash, faEdit);

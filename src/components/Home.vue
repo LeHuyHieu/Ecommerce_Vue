@@ -3,29 +3,29 @@
     <div class="container mx-auto">
       <div class="lg:w-4/5 mx-auto">
         <h2 class="text-3xl font-semibold mb-5">Home</h2>
-        <div class="grid grid-cols-4 gap-4">
-        <div class="card">
+        <div class="grid grid-cols-4 gap-y-16 gap-x-6">
+        <div class="card" v-for="(product, index) in productsAll" :key="index">
           <div
-            class="w-full max-w-sm bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+            class="w-full max-w-sm bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700"
           >
-            <a href="#">
+            <router-link :to="'/detail-product/'+product.key" class="link-image">
               <img
                 class="p-8 rounded-t-lg"
-                :src="require('@/assets/images/apple-watch.png')"
+                :src="product.url_image"
                 alt="product image"
               />
-            </a>
+            </router-link>
             <div class="px-5 pb-5">
-              <a href="#">
+              <router-link :to="'/detail-product/'+product.key" class="text-center">
                 <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                  Apple Watch Series 7 GPS
+                  {{product.name}}
                 </h5>
-              </a>
-              <p>
-                Apple Watch Series 7 GPS la san pham den tu apple, la chiec dong ho rat dep...
+              </router-link>
+              <p class="line-clamp-2 text-center">
+                {{product.desc}}
               </p>
               <div class="flex items-center justify-between mt-2.5 mb-5">
-                <span class="text-3xl inline-block font-bold text-gray-900 dark:text-white">$599</span>
+                <span class="text-3xl inline-block font-bold text-gray-900 dark:text-white">${{product.price}}</span>
                 <div class="flex items-center">
                   <div class="flex items-center space-x-1 rtl:space-x-reverse">
                     <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
@@ -49,7 +49,7 @@
               </div>
               <div class="flex items-center justify-between">
                 <button class="text-white shadow-md w-2/4 mr-2 glide-effect bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none hover:text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><font-awesome-icon icon="shopping-cart" /> <span class="ml-2">Add </span></button>
-                <router-link to="/detail-product/1" class="text-white shadow-md w-2/4 ml-2 glide-effect bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none hover:text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><font-awesome-icon icon="eye" /> <span class="ml-2">View </span></router-link>
+                <router-link  :to="'/detail-product/'+product.key" class="text-white shadow-md w-2/4 ml-2 glide-effect bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none hover:text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><font-awesome-icon icon="eye" /> <span class="ml-2">View </span></router-link>
               </div>
             </div>
           </div>
@@ -60,10 +60,51 @@
   </div>
 </template>
 <script>
+import ProductService from "@/services/ProductService"
+import { onMounted, ref } from "vue"
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faShoppingCart, faEye } from "@fortawesome/free-solid-svg-icons";
+
 library.add(faShoppingCart, faEye);
-export default {};
+
+export default {
+  setup() {
+    const productsAll = ref([]);
+
+    const getProductData = async () => {
+      try {
+        const products = await ProductService.getHomeLimitProducts();
+        productsAll.value = products;
+      } catch (error) {
+        console.error("Error getting product data:", error);
+      }
+    };
+
+    onMounted(async () => {
+      await getProductData();
+      console.log(productsAll.value);
+    });
+
+    return {
+      getProductData,
+      productsAll
+    }
+  }
+};
 </script>
 <style lang="css">
+p.line-clamp-2 {
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  display: -webkit-box;
+  min-height: 50px;
+}
+a.link-image {
+  min-height: 300px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 </style>

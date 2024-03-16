@@ -1,4 +1,4 @@
-import { getDatabase, ref, push, child, update, remove, get } from "firebase/database";
+import { getDatabase, ref, push, child, update, remove, get, query, orderByKey, limitToLast } from "firebase/database";
 import { database } from "../firebase";
 const db = ref(getDatabase(), "/products");
 
@@ -53,6 +53,23 @@ class ProductService {
 
     deleteAll() {
         return remove(db);
+    }
+
+    getHomeLimitProducts() {
+        const sortedQuery = query(db, orderByKey(), limitToLast(8));
+
+        return get(sortedQuery).then((snapshot) => {
+            const products = [];
+            snapshot.forEach((childSnapshot) => {
+                const product = childSnapshot.val();
+                product.key = childSnapshot.key;
+                products.push(product);
+            });
+            return products.reverse();
+        }).catch((error) => {
+            console.error("Error getting last six products:", error);
+            throw error;
+        });
     }
 }
 
