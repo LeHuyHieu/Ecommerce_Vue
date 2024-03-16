@@ -7,7 +7,7 @@
           <h2 class="text-3xl font-semibold mb-5">Detail product</h2>
           <div class="flex flex-wrap">
             <div
-              class="lg:w-5/12 p-10 h-96 w-full shadow-md rounded-md border border-gray-100"
+              class="lg:w-5/12 p-10 w-full shadow-md rounded-md border border-gray-100"
             >
               <img
                 alt="ecommerce"
@@ -147,7 +147,9 @@
                   >${{ $helpers.formatPrice(product.price) }}</span
                 >
                 <div>
+                  <input type="number" class="w-20 rounded-md border border-gray-300 shadow text-center" v-model="product.quantity" min="1" value="1" />
                   <button
+                    @click="$helpers.addToCart(product)"
                     class="w-full shadow-md rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
                     <font-awesome-icon icon="shopping-cart" /> Add to cart
@@ -186,6 +188,7 @@ export default {
     const getProductData = async () => {
       try {
         const productData = await ProductService.get(productId);
+        productData.quantity = 1;
         product.value = productData;
       } catch (error) {
         console.error("Error fetching product data:", error);

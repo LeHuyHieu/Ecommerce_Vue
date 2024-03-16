@@ -48,7 +48,7 @@
                 </div>
               </div>
               <div class="flex items-center justify-between">
-                <button class="text-white shadow-md w-2/4 mr-2 glide-effect bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none hover:text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><font-awesome-icon icon="shopping-cart" /> <span class="ml-2">Add </span></button>
+                <button @click="$helpers.addToCart(product)" class="text-white shadow-md w-2/4 mr-2 glide-effect bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none hover:text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><font-awesome-icon icon="shopping-cart" /> <span class="ml-2">Add </span></button>
                 <router-link  :to="'/detail-product/'+product.key" class="text-white shadow-md w-2/4 ml-2 glide-effect bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none hover:text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><font-awesome-icon icon="eye" /> <span class="ml-2">View </span></router-link>
               </div>
             </div>
