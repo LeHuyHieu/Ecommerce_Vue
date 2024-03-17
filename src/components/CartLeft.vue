@@ -1,7 +1,7 @@
 <template lang="">
   <div>
     <div
-      :class="{ hidden: !show }" 
+      :class="{ hidden: !show }"
       class="relative z-10"
       aria-labelledby="slide-over-title"
       role="dialog"
@@ -20,7 +20,9 @@
               <div
                 class="flex h-full flex-col overflow-y-scroll no-scrollbar bg-white shadow-xl"
               >
-                <div class="flex-1 overflow-y-auto no-scrollbar px-4 py-6 sm:px-6">
+                <div
+                  class="flex-1 overflow-y-auto no-scrollbar px-4 py-6 sm:px-6"
+                >
                   <div class="flex items-start justify-between">
                     <h2
                       class="text-lg font-medium text-gray-900"
@@ -57,7 +59,11 @@
                   <div class="mt-8">
                     <div class="flow-root">
                       <ul role="list" class="-my-6 divide-y divide-gray-200">
-                        <li class="flex py-6" v-for="(product, index) in $helpers.getCart()" :key="index">
+                        <li
+                          class="flex py-6"
+                          v-for="(product, index) in carts"
+                          :key="index"
+                        >
                           <div
                             class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
                           >
@@ -74,20 +80,35 @@
                                 class="flex justify-between text-base font-medium text-gray-900"
                               >
                                 <h3>
-                                  <router-link :to="/detail-product/+product.key">{{product.name}}</router-link>
+                                  <router-link
+                                    :to="/detail-product/ + product.key"
+                                    >{{ product.name }}</router-link
+                                  >
                                 </h3>
-                                <p class="ml-4">${{$helpers.formatPrice(product.price)}}</p>
+                                <p class="ml-4">
+                                  ${{ $helpers.formatPrice(product.price) }}
+                                </p>
                               </div>
-                              <p class="mt-1 text-sm text-gray-500 flex items-center">Color: <button class="w-2 h-2 ml-2 border rounded-full p-2" :style="{backgroundColor: product.color}"></button> </p>
+                              <p
+                                class="mt-1 text-sm text-gray-500 flex items-center"
+                              >
+                                Color:
+                                <button
+                                  class="w-2 h-2 ml-2 border rounded-full p-2"
+                                  :style="{ backgroundColor: product.color }"
+                                ></button>
+                              </p>
                             </div>
                             <div
                               class="flex flex-1 items-end justify-between text-sm"
                             >
-                              <p class="text-gray-500">Qty {{product.quantity}}</p>
+                              <p class="text-gray-500">
+                                Qty {{ product.quantity }}
+                              </p>
 
                               <div class="flex">
                                 <button
-                                  @click="$helpers.removeCart(index)"
+                                  @click="removeCart(index)"
                                   type="button"
                                   class="font-medium text-indigo-600 hover:text-indigo-500"
                                 >
@@ -97,7 +118,7 @@
                             </div>
                           </div>
                         </li>
-                        <li class="flex py-6" v-if="$helpers.getCart().length == 0">
+                        <li class="flex py-6" v-if="carts.length == 0">
                           <p>Vui long them vao gio hang!</p>
                         </li>
                         <!-- More products... -->
@@ -116,12 +137,15 @@
                   <p class="mt-0.5 text-sm text-gray-500">
                     Shipping and taxes calculated at checkout.
                   </p>
-                  <div class="mt-6 flex items-center justify-between flex-wrap sm:flex-nowrap">
+                  <div
+                    class="mt-6 flex items-center justify-between flex-wrap sm:flex-nowrap"
+                  >
                     <router-link
                       to="/cart"
                       @click="closeModal"
                       class="inline-flex items-center w-full sm:w-1/2 mr-0 sm:mr-2 mb-3 sm:mb-0 hover:text-indigo-700 justify-center rounded-md border-2 border-indigo-700 bg-white-600 px-6 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-50 shadow-sm"
-                      >View full cart</router-link>
+                      >View full cart</router-link
+                    >
                     <a
                       href="#"
                       class="inline-flex items-center w-full sm:w-1/2 ml-0 sm:ml-2 hover:text-white justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
@@ -152,6 +176,10 @@
   </div>
 </template>
 <script>
+import CartService from "@/services/CartService";
+import { onMounted, computed, ref } from "vue";
+import { useStore } from 'vuex';
+
 export default {
   props: {
     show: Boolean,
@@ -160,6 +188,28 @@ export default {
     closeModal() {
       this.$emit("close");
     },
+  },
+  setup() {
+    const store = useStore();
+    const carts = ref(computed(() => store.state.carts));
+
+    const updateCart = () => {
+      carts.value = CartService.getCart();
+    };
+
+    const removeCart = (index) => {
+      CartService.removeCart(index);
+      carts.value = CartService.getCart();
+    };
+
+    onMounted(() => {
+      updateCart();
+    });
+
+    return {
+      removeCart,
+      carts
+    };
   },
 };
 </script>

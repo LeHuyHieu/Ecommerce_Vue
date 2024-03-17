@@ -48,7 +48,7 @@
                 </div>
               </div>
               <div class="flex items-center justify-between">
-                <button @click="$helpers.addToCart(product)" class="text-white shadow-md w-2/4 mr-2 glide-effect bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none hover:text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><font-awesome-icon icon="shopping-cart" /> <span class="ml-2">Add </span></button>
+                <button @click="addToCart(product)" class="text-white shadow-md w-2/4 mr-2 glide-effect bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none hover:text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><font-awesome-icon icon="shopping-cart" /> <span class="ml-2">Add </span></button>
                 <router-link  :to="'/detail-product/'+product.key" class="text-white shadow-md w-2/4 ml-2 glide-effect bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none hover:text-white focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><font-awesome-icon icon="eye" /> <span class="ml-2">View </span></router-link>
               </div>
             </div>
@@ -60,8 +60,10 @@
   </div>
 </template>
 <script>
-import ProductService from "@/services/ProductService"
-import { onMounted, ref } from "vue"
+import ProductService from "@/services/ProductService";
+import CartService from "@/services/CartService";
+import { onMounted, ref } from "vue";
+import { useStore } from 'vuex';
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faShoppingCart, faEye } from "@fortawesome/free-solid-svg-icons";
@@ -71,6 +73,7 @@ library.add(faShoppingCart, faEye);
 export default {
   setup() {
     const productsAll = ref([]);
+    const store = useStore();
 
     const getProductData = async () => {
       try {
@@ -81,12 +84,18 @@ export default {
       }
     };
 
+    const addToCart = (cart) => {
+      CartService.addToCart(cart);
+      store.dispatch('addToCart', cart);
+    }
+
     onMounted(async () => {
       await getProductData();
     });
 
     return {
-      productsAll
+      productsAll,
+      addToCart,
     }
   }
 };

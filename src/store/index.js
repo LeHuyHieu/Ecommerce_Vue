@@ -19,7 +19,9 @@ const alerts = (type, title, desc) => {
 
 export default createStore({
     state: {
-        user: null
+        user: null,
+        cartCount: 0,
+        carts: [],
     },
     mutations: {
         SET_USER(state, user) {
@@ -28,6 +30,14 @@ export default createStore({
 
         CLEAR_USER(state) {
             state.user = null
+        },
+
+        updateCartCount(state, count) {
+            state.cartCount = count;
+        },
+
+        addToCart(state, cart) {
+            state.carts.push(cart);
         },
     },
     actions: {
@@ -59,7 +69,6 @@ export default createStore({
             try {
                 await createUserWithEmailAndPassword(auth, email, password)
                 commit('SET_USER', auth.currentUser)
-                // localStorage.setItem('user', JSON.stringify(auth.currentUser));
                 alerts('success', 'Success', 'Đăng ký thành công.')
                 router.push('/login')
             } catch (err) {
@@ -104,6 +113,20 @@ export default createStore({
                     }
                 }
             })
-        }
+        },
+
+        addToCart({ commit }, cart) {
+            const carts = this.state.carts;
+            let flag = false;
+            carts.forEach((element, index) => {
+                if (element.key == cart.key) {
+                    carts[index].quantity += cart.quantity ? cart.quantity : 1;
+                    flag = true;
+                }
+            });
+            if (!flag) {
+                commit('addToCart', cart);
+            }
+        },
     },
 })
