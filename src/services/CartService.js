@@ -14,7 +14,8 @@ class CartService {
         let flag = false;
         carts.forEach((element, index) => {
             if (element.key === cart.key) {
-                carts[index].quantity += cart.quantity ? cart.quantity : 1;
+                carts[index].quantity = cart.quantity ? element.quantity + cart.quantity : 1;
+                this.updateCartItem(index, carts[index])
                 notify({
                     group: "foo",
                     title: "Success",
@@ -23,10 +24,9 @@ class CartService {
                     text: "Đã tăng số lượng sản phẩm.",
                 },3000)
                 flag = true;
-                return;
             }
         });
-        if (!flag) {
+        if (flag === false) {
             cart.quantity = cart.quantity ? cart.quantity : 1;
             notify({
                 group: "foo",
@@ -36,13 +36,20 @@ class CartService {
                 text: "Đã thêm sản phẩm vào giỏ hàng.",
             },3000)
             carts.push(cart);
+            store.dispatch('addToCart', cart);
         }
         localStorage.setItem('carts', JSON.stringify(carts));
         store.commit('updateCartCount', carts.length);
     }
 
+    updateCartItem(index, cart) {
+        let carts = this.getCart();
+        carts[index] = cart;
+        localStorage.setItem('carts', JSON.stringify(carts));
+        store.commit('updateCartItem', { index, cart });
+    }
+
     removeCart(id) {
-        console.log(id);
         let carts = JSON.parse(localStorage.getItem("carts"));
         for (let i = 0; i < carts.length; i++) {
             if (i == id) {
@@ -53,6 +60,30 @@ class CartService {
         localStorage.setItem("carts", carts);
         store.commit('updateCartCount', carts.length);
         store.state.carts = carts;
+    }
+
+    updateCartLess(index) {
+        let carts = this.getCart();
+        carts.forEach((e, i) => {
+            if (index == i) {
+                if (e.quantity > 1) {
+                    carts[i].quantity = e.quantity - 1;
+                }else {
+                    carts.splice(i, 1)
+                }
+            }
+        })
+        localStorage.setItem('carts', JSON.stringify(carts));
+    }
+
+    updateCartPlus(index) {
+        let carts = this.getCart();
+        carts.forEach((e, i) => {
+            if (index == i) {
+                carts[i].quantity = e.quantity + 1;
+            }
+        })
+        localStorage.setItem('carts', JSON.stringify(carts));
     }
 }
 

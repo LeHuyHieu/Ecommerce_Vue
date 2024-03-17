@@ -1,7 +1,7 @@
 <template lang="">
   <div class="cart-page py-10">
     <div class="container mx-auto">
-      <div class="lg:w-4/5 mx-auto">
+      <div class="lg:w-11/12 mx-auto">
         <div class="font-[sans-serif]">
           <div class="grid lg:grid-cols-3">
             <div class="lg:col-span-2 pr-10 bg-white overflow-x-auto">
@@ -9,7 +9,7 @@
                 <h2 class="text-2xl font-semibold text-[#333] flex-1">
                   Shopping Cart
                 </h2>
-                <h3 class="text-xl font-semibold text-[#333]">1 Items</h3>
+                <h3 class="text-xl font-semibold text-[#333]">{{carts.length}} Items</h3>
               </div>
               <div>
                 <table class="mt-6 w-full border-collapse divide-y">
@@ -21,21 +21,22 @@
                     </tr>
                   </thead>
                   <tbody class="whitespace-nowrap divide-y">
-                    <tr>
+                    <tr v-for="(product, index) in carts" :key="index">
                       <td class="py-6 px-4">
                         <div class="flex items-center gap-6 w-max">
                           <div class="h-36 shrink-0">
                             <img
-                              src="https://readymadeui.com/images/product6.webp"
+                              :src="product.url_image"
                               class="w-full h-full object-contain"
                             />
                           </div>
                           <div>
                             <p class="text-md font-bold text-[#333]">
-                              Black T-Shirt
+                              {{product.name}}
                             </p>
                             <button
                               type="button"
+                              @click="removeCart(index)"
                               class="mt-4 font-semibold text-red-400 text-sm"
                             >
                               Remove
@@ -47,6 +48,7 @@
                         <div class="flex divide-x border w-max">
                           <button
                             type="button"
+                            @click="updateCartLess(index)"
                             class="bg-gray-100 px-4 py-2 font-semibold"
                           >
                             <svg
@@ -62,11 +64,12 @@
                           </button>
                           <input
                             type="text"
-                            value="1"
+                            :value="product.quantity"
                             class="bg-transparent px-4 py-2 font-semibold text-[#333] w-11 border border-gray-100 text-md"
                           />
                           <button
                             type="button"
+                            @click="updateCartPlus(index)"
                             class="bg-gray-800 text-white px-4 py-2 font-semibold"
                           >
                             <svg
@@ -83,7 +86,7 @@
                         </div>
                       </td>
                       <td class="py-6 px-4">
-                        <h4 class="text-md font-bold text-[#333]">$18.5</h4>
+                        <h4 class="text-md font-bold text-[#333]">${{$helpers.formatPrice(product.price * product.quantity)}}</h4>
                       </td>
                     </tr>
                   </tbody>
@@ -96,7 +99,7 @@
               </h3>
               <ul class="text-[#333] divide-y mt-6">
                 <li class="flex flex-wrap gap-4 text-md py-4">
-                  Subtotal <span class="ml-auto font-bold">$37.00</span>
+                  Subtotal <span class="ml-auto font-bold">${{$helpers.formatPrice($helpers.subToTal(carts))}}</span>
                 </li>
                 <li class="flex flex-wrap gap-4 text-md py-4">
                   Shipping <span class="ml-auto font-bold">$4.00</span>
@@ -105,7 +108,7 @@
                   Tax <span class="ml-auto font-bold">$4.00</span>
                 </li>
                 <li class="flex flex-wrap gap-4 text-md py-4 font-bold">
-                  Total <span class="ml-auto">$45.00</span>
+                  Total <span class="ml-auto">${{$helpers.formatPrice($helpers.subToTal(carts) + 8)}}</span>
                 </li>
               </ul>
               <button
@@ -122,6 +125,43 @@
   </div>
 </template>
 <script>
-export default {};
+import CartService from "@/services/CartService";
+import { onMounted, computed, ref } from "vue";
+import { useStore } from 'vuex';
+
+export default {
+  setup() {
+    const store = useStore();
+    const carts = ref(computed(() => store.state.carts));
+
+    const updateCart = () => {
+      carts.value = CartService.getCart();
+    };
+
+    const updateCartPlus = (index) => {
+      CartService.updateCartPlus(index)
+    }
+
+    const updateCartLess = (index) => {
+      CartService.updateCartLess(index)
+    }
+
+    const removeCart = (index) => {
+      CartService.removeCart(index);
+      carts.value = CartService.getCart();
+    };
+
+    onMounted(() => {
+      updateCart();
+    });
+
+    return {
+      removeCart,
+      updateCartPlus,
+      updateCartLess,
+      carts
+    };
+  }
+};
 </script>
 <style lang=""></style>

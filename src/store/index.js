@@ -21,7 +21,7 @@ export default createStore({
     state: {
         user: null,
         cartCount: 0,
-        carts: [],
+        carts: JSON.parse(localStorage.getItem('carts')) || [],
     },
     mutations: {
         SET_USER(state, user) {
@@ -38,6 +38,11 @@ export default createStore({
 
         addToCart(state, cart) {
             state.carts.push(cart);
+        },
+
+        updateCartItem(state, payload) {
+            const { index, cart } = payload;
+            state.carts[index] = cart;
         },
     },
     actions: {
@@ -116,17 +121,11 @@ export default createStore({
         },
 
         addToCart({ commit }, cart) {
-            const carts = this.state.carts;
-            let flag = false;
-            carts.forEach((element, index) => {
-                if (element.key == cart.key) {
-                    carts[index].quantity += cart.quantity ? cart.quantity : 1;
-                    flag = true;
-                }
-            });
-            if (!flag) {
-                commit('addToCart', cart);
-            }
+            commit('addToCart', cart);
+        },
+
+        updateCartItem({ commit }, payload) {
+            commit('updateCartItem', payload);
         },
     },
 })

@@ -147,7 +147,7 @@
                   >${{ $helpers.formatPrice(product.price) }}</span
                 >
                 <div class="flex sm:block flex-wrap items-center">
-                  <input type="number" class="w-full sm:w-24 mr-2 mb-2 sm:mb-0 sm:w-20 rounded-md border border-gray-300 shadow text-center" v-model="product.quantity" min="1" value="1" />
+                  <input type="number" class="w-full sm:w-24 mr-2 mb-2 sm:mb-0 sm:w-20 rounded-md border border-gray-300 shadow text-center" v-model="quantity" min="1" />
                   <button
                     @click="addToCart(product)"
                     class="w-full sm:w-fit mb-2 sm:mb-0 shadow-md rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-auto sm:ml-3 sm:w-auto sm:text-sm"
@@ -173,6 +173,7 @@ import ProductService from "@/services/ProductService";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import CartService from "@/services/CartService";
+// import { useStore } from "vuex"
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -184,20 +185,22 @@ export default {
   setup() {
     const product = ref({});
     const router = useRouter();
+    // const store = useStore();
+    const quantity = ref(1);
     const productId = router.currentRoute.value.params.id;
 
     const getProductData = async () => {
       try {
         const productData = await ProductService.get(productId);
-        productData.quantity = 1;
         product.value = productData;
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
     };
 
-    const addToCart = async (product) => {
-      CartService.addToCart(product)
+    const addToCart = async (cart) => {
+      cart.quantity = quantity.value;
+      CartService.addToCart(cart)
     }
 
     onMounted(() => {
@@ -206,6 +209,7 @@ export default {
     return {
       product,
       addToCart,
+      quantity
     };
   },
 };

@@ -63,7 +63,7 @@
 import ProductService from "@/services/ProductService";
 import CartService from "@/services/CartService";
 import { onMounted, ref } from "vue";
-import { useStore } from 'vuex';
+// import { useStore } from 'vuex';
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faShoppingCart, faEye } from "@fortawesome/free-solid-svg-icons";
@@ -73,7 +73,7 @@ library.add(faShoppingCart, faEye);
 export default {
   setup() {
     const productsAll = ref([]);
-    const store = useStore();
+    // const store = useStore();
 
     const getProductData = async () => {
       try {
@@ -85,8 +85,8 @@ export default {
     };
 
     const addToCart = (cart) => {
+      cart.quantity = 1;
       CartService.addToCart(cart);
-      store.dispatch('addToCart', cart);
     }
 
     onMounted(async () => {
