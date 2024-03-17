@@ -133,11 +133,12 @@
 import CartService from "@/services/CartService";
 import { onMounted, computed, ref } from "vue";
 import { useStore } from 'vuex';
+import router from "@/router";
 
 export default {
   data() {
     return {
-      keyCarts: [],
+      listItemCheckout: [],
     }
   },
   methods: {
@@ -153,14 +154,15 @@ export default {
       this.totalPrice();
     },
     getItemCheckout() {
-      this.keyCarts = []
+      this.listItemCheckout = []
       this.carts.forEach((item, index) => {
         const checkbox = document.getElementById(`checkoutItem${index}`);
         if (checkbox.checked) {
-          this.keyCarts.push(index)
+          this.listItemCheckout.push(item);
         }
       });
-      console.log(this.keyCarts);
+      localStorage.setItem('list-checkout', JSON.stringify(this.listItemCheckout));
+      router.push('/checkout')
     }
   },
   mounted() {

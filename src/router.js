@@ -79,6 +79,11 @@ const router = createRouter({
 // kiểm tra đăng nhập
 router.beforeEach((to, from, next) => {
   let isLogin  = AuthService.isLogin()
+  const isCartOrCheckoutPage = to.name === 'cart' || to.name === 'checkout';
+
+  if (!isCartOrCheckoutPage) {
+    localStorage.removeItem('list-checkout');
+  }
 
   if (to.path === '/login' && isLogin) {
     next('/')
