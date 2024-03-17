@@ -22,6 +22,14 @@ const routes = [
     component: () => import("./components/CartPage.vue")
   },
   {
+    path: "/checkout",
+    name: "checkout",
+    meta: {
+      requiresAuth: true
+    },
+    component: () => import("./components/Checkout.vue")
+  },
+  {
     path: "/list-product",
     name: "list-product",
     meta: {
@@ -55,8 +63,12 @@ const routes = [
     name: "login",
     component: () => import("./components/Login")
   },
-  { path: '/:pathMatch(.*)', redirect: '/404' },
-    { path: '/404', component: () => import("./components/PageNotFound") },
+  { 
+    path: '/:pathMatch(.*)', redirect: '/404' 
+  },
+  { 
+    path: '/404', component: () => import("./components/PageNotFound") 
+  },
 ];
 
 const router = createRouter({

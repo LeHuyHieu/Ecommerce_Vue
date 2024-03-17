@@ -132,13 +132,8 @@
                 <div class="flex">
                   <span class="mr-3">Color</span>
                   <button
-                    class="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"
-                  ></button>
-                  <button
-                    class="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"
-                  ></button>
-                  <button
-                    class="border-2 border-gray-300 ml-1 bg-red-500 rounded-full w-6 h-6 focus:outline-none"
+                    class="border-2 border-gray-300 ml-1 rounded-full w-6 h-6 focus:outline-none"
+                    :style="{backgroundColor: product.color}"
                   ></button>
                 </div>
               </div>

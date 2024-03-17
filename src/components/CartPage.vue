@@ -11,20 +11,22 @@
                 </h2>
                 <h3 class="text-xl font-semibold text-[#333]">{{carts.length}} Items</h3>
               </div>
-              <div>
+              <div class="px-2">
                 <table class="mt-6 w-full border-collapse divide-y">
                   <thead class="whitespace-nowrap text-left">
                     <tr>
-                      <th class="text-base text-[#333] p-4">Description</th>
+                      <th><input type="checkbox" @change="checkAll" checked id="checkoutAll" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" /></th>
+                      <th class="text-base text-[#333] p-4">Name</th>
                       <th class="text-base text-[#333] p-4">Quantity</th>
                       <th class="text-base text-[#333] p-4">Price</th>
                     </tr>
                   </thead>
                   <tbody class="whitespace-nowrap divide-y">
                     <tr v-for="(product, index) in carts" :key="index">
+                      <td><input type="checkbox" :id="'checkoutItem'+index" @change="checkItem" checked class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" /></td>
                       <td class="py-6 px-4">
                         <div class="flex items-center gap-6 w-max">
-                          <div class="h-36 shrink-0">
+                          <div class="h-20 shrink-0">
                             <img
                               :src="product.url_image"
                               class="w-full h-full object-contain"
@@ -32,7 +34,7 @@
                           </div>
                           <div>
                             <p class="text-md font-bold text-[#333]">
-                              {{product.name}}
+                              <router-link :to="/detail-product/+product.key">{{product.name}}</router-link>
                             </p>
                             <button
                               type="button"
@@ -65,7 +67,7 @@
                           <input
                             type="text"
                             :value="product.quantity"
-                            class="bg-transparent px-4 py-2 font-semibold text-[#333] w-11 border border-gray-100 text-md"
+                            class="bg-transparent px-1 text-center py-2 font-semibold text-[#333] w-11 border border-gray-100 text-md"
                           />
                           <button
                             type="button"
@@ -89,6 +91,9 @@
                         <h4 class="text-md font-bold text-[#333]">${{$helpers.formatPrice(product.price * product.quantity)}}</h4>
                       </td>
                     </tr>
+                    <tr v-if="carts.length == 0">
+                      <td colspan="3" class="py-10 text-center"><b class="text-2xl">Không có sản phẩm nào</b></td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -99,21 +104,21 @@
               </h3>
               <ul class="text-[#333] divide-y mt-6">
                 <li class="flex flex-wrap gap-4 text-md py-4">
-                  Subtotal <span class="ml-auto font-bold">${{$helpers.formatPrice($helpers.subToTal(carts))}}</span>
+                  Subtotal <span class="ml-auto font-bold">${{$helpers.formatPrice(total)}}</span>
                 </li>
                 <li class="flex flex-wrap gap-4 text-md py-4">
-                  Shipping <span class="ml-auto font-bold">$4.00</span>
+                  Shipping <span class="ml-auto font-bold">$4,00</span>
                 </li>
                 <li class="flex flex-wrap gap-4 text-md py-4">
-                  Tax <span class="ml-auto font-bold">$4.00</span>
+                  Tax <span class="ml-auto font-bold">$4,00</span>
                 </li>
                 <li class="flex flex-wrap gap-4 text-md py-4 font-bold">
-                  Total <span class="ml-auto">${{$helpers.formatPrice($helpers.subToTal(carts) + 8)}}</span>
+                  Total <span class="ml-auto">${{$helpers.formatPrice(total + 8)}}</span>
                 </li>
               </ul>
               <button
-                type="button"
-                class="mt-6 text-md px-6 py-2.5 w-full bg-blue-600 hover:bg-blue-700 text-white rounded"
+                @click="getItemCheckout"
+                class="mt-6 text-md px-6 py-2.5 w-full bg-blue-600 hover:text-white inline-block text-center hover:bg-blue-700 text-white rounded"
               >
                 Check out
               </button>
@@ -130,9 +135,51 @@ import { onMounted, computed, ref } from "vue";
 import { useStore } from 'vuex';
 
 export default {
+  data() {
+    return {
+      keyCarts: [],
+    }
+  },
+  methods: {
+    checkAll(event) {
+      const isChecked = event.target.checked;
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = isChecked;
+        this.totalPrice();
+      });
+    },
+    checkItem() {
+      this.totalPrice();
+    },
+    getItemCheckout() {
+      this.keyCarts = []
+      this.carts.forEach((item, index) => {
+        const checkbox = document.getElementById(`checkoutItem${index}`);
+        if (checkbox.checked) {
+          this.keyCarts.push(index)
+        }
+      });
+      console.log(this.keyCarts);
+    }
+  },
+  mounted() {
+    this.totalPrice()
+  },
   setup() {
     const store = useStore();
     const carts = ref(computed(() => store.state.carts));
+    const total = ref(0);
+
+    const totalPrice = () => {
+      total.value = 0;
+      carts.value.forEach((item, index) => {
+        const checkbox = document.getElementById(`checkoutItem${index}`);
+        if (checkbox.checked) {
+          total.value += item.price * item.quantity;
+        }
+      });
+    }
 
     const updateCart = () => {
       carts.value = CartService.getCart();
@@ -140,15 +187,18 @@ export default {
 
     const updateCartPlus = (index) => {
       CartService.updateCartPlus(index)
+      totalPrice()
     }
 
     const updateCartLess = (index) => {
       CartService.updateCartLess(index)
+      totalPrice()
     }
 
     const removeCart = (index) => {
       CartService.removeCart(index);
       carts.value = CartService.getCart();
+      totalPrice()
     };
 
     onMounted(() => {
@@ -159,6 +209,8 @@ export default {
       removeCart,
       updateCartPlus,
       updateCartLess,
+      totalPrice,
+      total,
       carts
     };
   }
