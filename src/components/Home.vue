@@ -63,7 +63,6 @@
 import ProductService from "@/services/ProductService";
 import CartService from "@/services/CartService";
 import { onMounted, ref } from "vue";
-// import { useStore } from 'vuex';
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faShoppingCart, faEye } from "@fortawesome/free-solid-svg-icons";
@@ -73,7 +72,6 @@ library.add(faShoppingCart, faEye);
 export default {
   setup() {
     const productsAll = ref([]);
-    // const store = useStore();
 
     const getProductData = async () => {
       try {
@@ -95,7 +93,7 @@ export default {
 
     return {
       productsAll,
-      addToCart,
+      addToCart
     }
   }
 };
@@ -107,6 +105,12 @@ export default {
   overflow: hidden;
   display: -webkit-box;
   min-height: 50px;
+}
+.line-clamp-1 {
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  display: -webkit-box;
 }
 a.link-image {
   min-height: 300px;

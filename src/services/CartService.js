@@ -22,7 +22,7 @@ class CartService {
                     position: "top-center",
                     type: "success",
                     text: "Đã tăng số lượng sản phẩm.",
-                },3000)
+                }, 3000)
                 flag = true;
             }
         });
@@ -34,12 +34,13 @@ class CartService {
                 position: "top-center",
                 type: "success",
                 text: "Đã thêm sản phẩm vào giỏ hàng.",
-            },3000)
+            }, 3000)
             carts.push(cart);
             store.dispatch('addToCart', cart);
         }
         localStorage.setItem('carts', JSON.stringify(carts));
         store.commit('updateCartCount', carts.length);
+        store.commit('updateTotalCart', this.updateTotalCart());
     }
 
     updateCartItem(index, cart) {
@@ -59,6 +60,7 @@ class CartService {
         carts = JSON.stringify(carts);
         localStorage.setItem("carts", carts);
         store.commit('updateCartCount', carts.length);
+        store.commit('updateTotalCart', this.updateTotalCart());
         store.state.carts = carts;
     }
 
@@ -68,7 +70,7 @@ class CartService {
             if (index == i) {
                 if (e.quantity > 1) {
                     carts[i].quantity = e.quantity - 1;
-                }else {
+                } else {
                     carts.splice(i, 1)
                 }
             }
@@ -84,6 +86,15 @@ class CartService {
             }
         })
         localStorage.setItem('carts', JSON.stringify(carts));
+    }
+
+    updateTotalCart() {
+        let total = 0;
+        let carts = this.getCart();
+        carts.forEach(item => {
+            total += item.price * item.quantity;
+        });
+        return total;
     }
 }
 

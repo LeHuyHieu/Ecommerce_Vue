@@ -22,6 +22,7 @@ export default createStore({
         user: null,
         cartCount: 0,
         carts: JSON.parse(localStorage.getItem('carts')) || [],
+        totalCart: 0,
     },
     mutations: {
         SET_USER(state, user) {
@@ -44,6 +45,10 @@ export default createStore({
             const { index, cart } = payload;
             state.carts[index] = cart;
         },
+
+        updateTotalCart(state, total) {
+            state.totalCart = total;
+        }
     },
     actions: {
         async login({ commit }, detail) {

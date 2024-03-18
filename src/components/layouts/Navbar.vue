@@ -114,7 +114,6 @@
 import { useStore } from "vuex";
 import { onBeforeMount, onMounted,computed } from "vue";
 import CartService from "@/services/CartService";
-// import mitt from 'mitt';
 
 import CartLeft from "../CartLeft.vue";
 
@@ -148,7 +147,7 @@ export default {
     return {
       user: store.state.user,
       cartCount,
-      carts
+      carts,
     };
   },
 };

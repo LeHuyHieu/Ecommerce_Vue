@@ -79,7 +79,7 @@
                               <div
                                 class="flex justify-between text-base font-medium text-gray-900"
                               >
-                                <h3>
+                                <h3 class="line-clamp-1">
                                   <router-link
                                     :to="/detail-product/ + product.key"
                                     >{{ product.name }}</router-link
@@ -132,7 +132,7 @@
                     class="flex justify-between text-base font-medium text-gray-900"
                   >
                     <p>Subtotal</p>
-                    <p>$262.00</p>
+                    <p>${{$helpers.formatPrice(totalCart)}}</p>
                   </div>
                   <p class="mt-0.5 text-sm text-gray-500">
                     Shipping and taxes calculated at checkout.
@@ -192,14 +192,17 @@ export default {
   setup() {
     const store = useStore();
     const carts = ref(computed(() => store.state.carts));
-
+    const totalCart = ref(computed(() => store.state.totalCart ?? CartService.updateTotalCart()));
+    
     const updateCart = () => {
       carts.value = CartService.getCart();
+      totalCart.value = CartService.updateTotalCart();
     };
 
     const removeCart = (index) => {
       CartService.removeCart(index);
       carts.value = CartService.getCart();
+      totalCart.value = CartService.updateTotalCart();
     };
 
     onMounted(() => {
@@ -208,7 +211,8 @@ export default {
 
     return {
       removeCart,
-      carts
+      carts,
+      totalCart,
     };
   },
 };
