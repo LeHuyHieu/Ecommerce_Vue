@@ -178,6 +178,12 @@
 </template>
 <script>
 import { ref } from "vue";
+import OrderService from "@/services/OrderService";
+import { useRouter } from "vue-router";
+import CartService from "@/services/CartService";
+
+import { notify } from "notiwind";
+
 export default {
   mounted() {
     this.getTotalPrice();
@@ -185,9 +191,12 @@ export default {
   setup() {
     const total = ref(0);
     const orderInfo = ref([]);
+    const carts = CartService.getCart()
     const dataCheckout = ref(
       JSON.parse(localStorage.getItem("list-checkout")) || []
     );
+
+    const router = useRouter();
 
     const getTotalPrice = () => {
       dataCheckout.value.forEach((e) => {
@@ -195,10 +204,36 @@ export default {
       });
     };
 
-    const orderSubmit = () => {
-      orderInfo.value.orderItem = dataCheckout.value
-      // console.log(orderInfo.value);
-      
+    const orderSubmit = async () => {
+      orderInfo.value.orderItem = dataCheckout.value;
+      try {
+        await OrderService.create(orderInfo.value);
+        carts.forEach((cart, id) => {
+          orderInfo.value.orderItem.forEach(item => {
+            if (cart.key === item.key) {
+              CartService.removeCart(id)
+            }
+          })
+        })
+        CartService.getCart()
+        notify({
+          group: "foo",
+          title: "Success",
+          position: "top-center",
+          type: "success",
+          text: "Đặt hàng thành công.",
+        }, 3000)
+        router.push('/')
+      } catch (err) {
+        console.log(err.message);
+        notify({
+          group: "foo",
+          title: "Error",
+          position: "top-center",
+          type: "error",
+          text: "Đặt hàng thất bại.",
+        }, 3000)
+      }
     };
 
     return {
