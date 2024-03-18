@@ -2,9 +2,9 @@ import { ref, child, get, query, orderByKey, limitToLast } from "firebase/databa
 import { database } from "../firebase";
 import {DB} from "./db";
 
-class ProductService extends DB{
+class OrderService extends DB{
     constructor() {
-        super("/products");
+        super("/orders");
     }
 
     getAll() {
@@ -61,4 +61,4 @@ class ProductService extends DB{
     }
 }
 
-export default new ProductService();
+export default new OrderService();

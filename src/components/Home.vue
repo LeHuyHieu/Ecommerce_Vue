@@ -17,7 +17,7 @@
             </router-link>
             <div class="px-5 pb-5">
               <router-link :to="'/detail-product/'+product.key" class="text-center">
-                <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                <h5 class="text-xl font-semibold line-clamp-2 tracking-tight text-gray-900 dark:text-white">
                   {{product.name}}
                 </h5>
               </router-link>
@@ -101,7 +101,7 @@ export default {
 };
 </script>
 <style lang="css">
-p.line-clamp-2 {
+.line-clamp-2 {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
