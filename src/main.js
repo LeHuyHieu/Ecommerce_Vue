@@ -1,9 +1,9 @@
 import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router';
-import store from './store';
+import App from '@/App.vue';
+import router from '@/router';
+import store from '@/store';
 import PrimeVue from 'primevue/config';
-import Helper from './helpers/Helper';
+import Helper from '@/helpers/Helper';
 //component
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 //notifications
 import Notifications from 'notiwind';
-import './assets/style.css';
+import '@/assets/style.css';
 //primevue
 // import "primevue/resources/themes/aura-light-blue/theme.css";
 // import "primeicons/primeicons.css";

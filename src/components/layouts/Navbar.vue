@@ -115,7 +115,7 @@ import { useStore } from "vuex";
 import { onBeforeMount, onMounted,computed } from "vue";
 import CartService from "@/services/CartService";
 
-import CartLeft from "../CartLeft.vue";
+import CartLeft from "./CartLeft.vue";
 
 export default {
   components: { CartLeft },

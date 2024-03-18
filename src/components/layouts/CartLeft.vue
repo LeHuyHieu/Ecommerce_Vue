@@ -192,7 +192,7 @@ export default {
   setup() {
     const store = useStore();
     const carts = ref(computed(() => store.state.carts));
-    const totalCart = ref(computed(() => store.state.totalCart ?? CartService.updateTotalCart()));
+    const totalCart = ref(computed(() => store.state.totalCart != 0 ? store.state.totalCart : CartService.updateTotalCart()));
     
     const updateCart = () => {
       carts.value = CartService.getCart();

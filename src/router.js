@@ -1,17 +1,17 @@
 import { createWebHistory, createRouter } from "vue-router";
-import AuthService from "./services/AuthService";
+import AuthService from "@/services/AuthService";
 
 const routes = [
   {
     path: "/",
     alias: "/home",
     name: "home",
-    component: () => import("./components/Home.vue")
+    component: () => import("./views/Home.vue")
   },
   {
     path: "/detail-product/:id",
     name: "detail-product",
-    component: () => import("./components/DetailProduct.vue")
+    component: () => import("./views/DetailProduct.vue")
   },
   {
     path: "/cart",
@@ -19,7 +19,7 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-    component: () => import("./components/CartPage.vue")
+    component: () => import("./views/CartPage.vue")
   },
   {
     path: "/checkout",
@@ -27,7 +27,7 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-    component: () => import("./components/Checkout.vue")
+    component: () => import("./views/Checkout.vue")
   },
   {
     path: "/list-product",
@@ -35,7 +35,7 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-    component: () => import("./components/HomeProduct")
+    component: () => import("./views/products/HomeProduct")
   },
   {
     path: "/add-product",
@@ -43,7 +43,7 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-    component: () => import("./components/products/Create.vue")
+    component: () => import("./views/products/Create.vue")
   },
   {
     path: "/edit-product/:id",
@@ -51,23 +51,23 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-    component: () => import("./components/products/Edit.vue")
+    component: () => import("./views/products/Edit.vue")
   },
   {
     path: "/register",
     name: "register",
-    component: () => import("./components/Register")
+    component: () => import("./views/Register")
   },
   {
     path: "/login",
     name: "login",
-    component: () => import("./components/Login")
+    component: () => import("./views/Login")
   },
   { 
     path: '/:pathMatch(.*)', redirect: '/404' 
   },
   { 
-    path: '/404', component: () => import("./components/PageNotFound") 
+    path: '/404', component: () => import("./views/PageNotFound") 
   },
 ];
 

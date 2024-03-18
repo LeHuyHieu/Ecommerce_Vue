@@ -182,7 +182,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSearch, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { ref as firebaseRef, deleteObject } from "firebase/storage";
 import { storage } from "@/firebase";
-import ConfirmDeleteModal from './ConfirmDelete.vue';
+import ConfirmDeleteModal from '../../components/ConfirmDelete.vue';
 
 library.add(faSearch, faTrash, faEdit);
 import { notify } from "notiwind";
