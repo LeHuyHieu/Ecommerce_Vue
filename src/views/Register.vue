@@ -7,10 +7,15 @@
             <h4 class="mb-0 text-center text-4xl font-semibold">Register</h4>
           </div>
           <div class="card-body">
-            <!-- <div class="form-group mb-3">
+            <div class="form-group mb-3">
               <label class="form-label">Full name</label>
-              <input type="text" class="form-control" v-model="register_form.fullname" />
-            </div> -->
+              <input 
+              type="text" 
+              class="block p-2 pl-5 text-sm rounded-full text-gray-900 border border-gray-300 rounded-lg w-full focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              v-model="register_form.name"
+              placeholder="Enter name"
+              />
+            </div>
             <div class="form-group mb-3">
               <label class="form-label">Email</label>
               <input

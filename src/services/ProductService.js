@@ -1,5 +1,5 @@
 import { ref, child, get, query, orderByKey, limitToLast } from "firebase/database";
-import { database } from "../firebase";
+import { database } from "@/firebase";
 import {DB} from "./db";
 
 class ProductService extends DB{

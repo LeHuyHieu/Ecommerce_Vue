@@ -1,5 +1,6 @@
 import { createStore } from "vuex"
 import router from "@/router"
+import AuthService from "@/services/AuthService"
 import { auth } from "@/firebase"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
 import { notify } from "notiwind";
@@ -19,7 +20,7 @@ const alerts = (type, title, desc) => {
 
 export default createStore({
     state: {
-        user: null,
+        user: [],
         cartCount: 0,
         carts: JSON.parse(localStorage.getItem('carts')) || [],
         totalCart: 0,
@@ -55,8 +56,10 @@ export default createStore({
             const { email, password } = detail
             try {
                 await signInWithEmailAndPassword(auth, email, password)
-                commit('SET_USER', auth.currentUser)
-                localStorage.setItem('user', JSON.stringify(auth.currentUser));
+                const user = await AuthService.getUser(auth.currentUser.uid)
+                localStorage.setItem('user', JSON.stringify(user));
+                commit('SET_USER', user);
+                console.log(user);
                 alerts('success', 'Success', 'Đăng nhập thành công.')
                 router.push('/')
             } catch (err) {
@@ -75,12 +78,21 @@ export default createStore({
         },
 
         async register({ commit }, detail) {
-            const { email, password } = detail
+            const { email, password, name } = detail
             try {
-                await createUserWithEmailAndPassword(auth, email, password)
-                commit('SET_USER', auth.currentUser)
+                const { user } = await createUserWithEmailAndPassword(auth, email, password)
+                const userId = user.uid; 
+                const newUser = {
+                    name: name,
+                    email: email,
+                    role: "user", 
+                    user_id: userId,
+                };
+                AuthService.create(email, name, userId);
+                commit('SET_USER', auth.currentUser);
+                localStorage.setItem('user', JSON.stringify(newUser));
                 alerts('success', 'Success', 'Đăng ký thành công.')
-                router.push('/login')
+                router.push('/')
             } catch (err) {
                 switch (err.code) {
                     case 'auth/email-already-exists':
@@ -116,14 +128,15 @@ export default createStore({
                     commit('CLEAR_USER')
                     localStorage.removeItem('user');
                 } else {
-                    commit('SET_USER', user)
-                    localStorage.setItem('user', JSON.stringify(user));
+                    const userData = await AuthService.getUser(user.uid);
+                    commit('SET_USER', userData)
+                    localStorage.setItem('user', JSON.stringify(userData));
                     if (router.isReady() && (router.currentRoute.value.path === '/login' || router.currentRoute.value.path === '/register')) {
                         router.push('/')
                     }
                 }
             })
-        },
+        },        
 
         addToCart({ commit }, cart) {
             commit('addToCart', cart);

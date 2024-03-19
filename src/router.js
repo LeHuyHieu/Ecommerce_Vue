@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import AuthService from "@/services/AuthService";
+import { notify } from "notiwind"
 
 const routes = [
   {
@@ -16,9 +17,6 @@ const routes = [
   {
     path: "/cart",
     name: "cart",
-    meta: {
-      requiresAuth: true
-    },
     component: () => import("./views/CartPage.vue")
   },
   {
@@ -33,7 +31,8 @@ const routes = [
     path: "/list-product",
     name: "list-product",
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresRole: "admin"
     },
     component: () => import("./views/products/HomeProduct")
   },
@@ -41,7 +40,8 @@ const routes = [
     path: "/add-product",
     name: "add-product",
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresRole: "admin"
     },
     component: () => import("./views/products/Create.vue")
   },
@@ -49,7 +49,8 @@ const routes = [
     path: "/edit-product/:id",
     name: "edit-product",
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresRole: "admin"
     },
     component: () => import("./views/products/Edit.vue")
   },
@@ -77,23 +78,46 @@ const router = createRouter({
 });
 
 // kiểm tra đăng nhập
-router.beforeEach((to, from, next) => {
-  let isLogin  = AuthService.isLogin()
+router.beforeEach(async (to, from, next) => {
+  let isLogin  = await AuthService.isLogin();
   const isCartOrCheckoutPage = to.name === 'cart' || to.name === 'checkout';
 
   if (!isCartOrCheckoutPage) {
     localStorage.removeItem('list-checkout');
   }
 
-  if (to.path === '/login' && isLogin) {
+  if (to.path === '/login' && isLogin.allow) {
     next('/')
     return
   }
 
-  if (to.matched.some(record => record.meta.requiresAuth) && !isLogin) {
+  if (to.matched.some(record => record.meta.requiresAuth) && !isLogin.allow) {
+    notify({
+      group: "foo",
+      title: "Warning",
+      position: "top-center", 
+      type: "warning",
+      text: "Bạn phải đăng nhập."
+    }, 3000);
     next('/login')
     return
   }
+
+  if (to.matched.some(record => record.meta.requiresRole)) {
+    const requiresRole = to.matched.find(record => record.meta.requiresRole);
+    if (requiresRole && requiresRole.meta.requiresRole !== isLogin.role) {
+      notify({
+        group: "foo",
+        title: "Warning",
+        position: "top-center", 
+        type: "warning",
+        text: "Bạn không đủ quyền vào trang này."
+      }, 3000);
+      next('/')
+      return
+    }
+  }
+
   next()
 })
 
