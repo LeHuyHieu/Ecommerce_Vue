@@ -57,8 +57,7 @@ class CartService {
                 carts.splice(i, 1);
             }
         }
-        carts = JSON.stringify(carts);
-        localStorage.setItem("carts", carts);
+        localStorage.setItem("carts", JSON.stringify(carts));
         store.commit('updateCartCount', carts.length);
         store.commit('updateTotalCart', this.updateTotalCart());
         store.state.carts = carts;

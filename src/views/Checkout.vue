@@ -136,7 +136,7 @@
                     />
                   </div>
                   <div>
-                    <h4 class="font-bold">
+                    <h4 class="font-bold text-wrap line-clamp-1 w-60 truncate">
                       {{ item.name }}, x{{ item.quantity }}
                     </h4>
                     <p class="inline-flex items-center">
@@ -183,6 +183,7 @@ import { useRouter } from "vue-router";
 import CartService from "@/services/CartService";
 
 import { notify } from "notiwind";
+import AuthService from "../services/AuthService";
 
 export default {
   mounted() {
@@ -191,7 +192,8 @@ export default {
   setup() {
     const total = ref(0);
     const orderInfo = ref([]);
-    const carts = CartService.getCart()
+    const carts = CartService.getCart();
+    const user = AuthService.getCurentUser();
     const dataCheckout = ref(
       JSON.parse(localStorage.getItem("list-checkout")) || []
     );
@@ -205,17 +207,18 @@ export default {
     };
 
     const orderSubmit = async () => {
+      orderInfo.value.user_id = user.user_id;
       orderInfo.value.orderItem = dataCheckout.value;
       try {
         await OrderService.create(orderInfo.value);
-        carts.forEach((cart, id) => {
-          orderInfo.value.orderItem.forEach(item => {
-            if (cart.key === item.key) {
-              CartService.removeCart(id)
-            }
-          })
-        })
-        CartService.getCart()
+        for (let i = carts.length - 1; i >= 0; i--) {
+          const cartItem = carts[i];
+          const found = dataCheckout.value.some(item => item.key === cartItem.key);
+          if (found) {
+            CartService.removeCart(i);
+          }
+        }
+        await CartService.getCart()
         notify({
           group: "foo",
           title: "Success",
@@ -223,7 +226,7 @@ export default {
           type: "success",
           text: "Đặt hàng thành công.",
         }, 3000)
-        router.push('/')
+        await router.push('/')
       } catch (err) {
         console.log(err.message);
         notify({

@@ -34,7 +34,7 @@
                           </div>
                           <div>
                             <p class="text-md font-bold text-[#333]">
-                              <router-link :to="/detail-product/+product.key">{{product.name}}</router-link>
+                              <router-link class="text-wrap line-clamp-1 inline-block w-80 truncate" :to="/detail-product/+product.key">{{product.name}}</router-link>
                             </p>
                             <button
                               type="button"

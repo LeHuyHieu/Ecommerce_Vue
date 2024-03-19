@@ -146,11 +146,10 @@
                       class="inline-flex items-center w-full sm:w-1/2 mr-0 sm:mr-2 mb-3 sm:mb-0 hover:text-indigo-700 justify-center rounded-md border-2 border-indigo-700 bg-white-600 px-6 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-50 shadow-sm"
                       >View full cart</router-link
                     >
-                    <a
-                      href="#"
+                    <button
+                      @click="getItemCheckout"
                       class="inline-flex items-center w-full sm:w-1/2 ml-0 sm:ml-2 hover:text-white justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                      >Checkout</a
-                    >
+                      >Checkout</button>
                   </div>
                   <div
                     class="mt-6 flex justify-center text-center text-sm text-gray-500"
@@ -179,6 +178,7 @@
 import CartService from "@/services/CartService";
 import { onMounted, computed, ref } from "vue";
 import { useStore } from 'vuex';
+import router from "@/router";
 
 export default {
   props: {
@@ -205,6 +205,11 @@ export default {
       totalCart.value = CartService.updateTotalCart();
     };
 
+    const getItemCheckout = () => {
+      localStorage.setItem('list-checkout', JSON.stringify(carts.value));
+      router.push('/checkout')
+    }
+
     onMounted(() => {
       updateCart();
     });
@@ -213,6 +218,7 @@ export default {
       removeCart,
       carts,
       totalCart,
+      getItemCheckout,
     };
   },
 };
