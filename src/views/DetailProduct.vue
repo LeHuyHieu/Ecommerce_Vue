@@ -150,7 +150,8 @@
                     <font-awesome-icon icon="shopping-cart" /> Add to cart
                   </button>
                   <button
-                    class="w-full shadow-md rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    @click="buyNow"
+                    class="w-full shadow-md rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
                     <font-awesome-icon icon="shopping-basket" /> Buy now
                   </button>
@@ -193,6 +194,16 @@ export default {
       }
     };
 
+    const buyNow = async () => {
+      try {
+        product.value.quantity = 1;
+        localStorage.setItem('list-checkout', JSON.stringify([product.value]));
+        router.push('/checkout')
+      } catch (error) {
+        console.log('error: ',error.message);
+      }
+    }
+
     const addToCart = async (cart) => {
       cart.quantity = quantity.value;
       CartService.addToCart(cart)
@@ -204,7 +215,8 @@ export default {
     return {
       product,
       addToCart,
-      quantity
+      quantity,
+      buyNow
     };
   },
 };

@@ -1,20 +1,16 @@
 <template lang="">
   <div class="menu">
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
-      <div class="flex flex-wrap items-center justify-between mx-auto p-4">
+      <div class="flex flex-wrap items-center justify-between mx-auto py-3 px-16">
         <router-link
           to="/"
           class="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            class="h-8"
+            :src="require('@/assets/images/logo.png')"
+            class="h-16"
             alt="Flowbite Logo"
           />
-          <span
-            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-            >Flowbite</span
-          >
         </router-link>
         <button
           data-collapse-toggle="navbar-default"
@@ -44,25 +40,10 @@
           <ul
             class="font-medium flex items-center flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
           >
-            <li v-if="$store.state.user">
-              <router-link
-                to="/list-product"
-                class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
-                aria-current="page"
-                >List Product</router-link
-              >
-            </li>
-            <li v-if="$store.state.user">
-              <router-link
-                to="/add-product"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >Add Product</router-link
-              >
-            </li>
             <li>
               <button @click="showCartLeft">
-                <div class="relative py-2">
-                  <div class="t-0 absolute left-3">
+                <div class="relative py-2 px-2">
+                  <div class="top-3 absolute left-5">
                     <p
                       class="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white"
                     >
@@ -86,7 +67,46 @@
                 </div>
               </button>
             </li>
-            <li v-if="$store.state.user">
+            <li class="li-parent-dropdown" v-if="$store.state.user !== null && $store.state.user !== undefined">
+              <button id="dropdownDefaultButton" @click="showDropdownClick" data-dropdown-toggle="dropdown" class="inline-flex items-center py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent" type="button">
+                <span class="mr-2">Account</span> 
+                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+              </button>
+              <!-- Dropdown menu -->
+              <div id="dropdown" :class="{ hidden: !showDropdown }" class="z-10 ul-dropdown-absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                  <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                    <li>
+                      <router-link to="/profile" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Profile</router-link>
+                    </li>
+                    <li>
+                      <router-link to="/list-order" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">List Order</router-link>
+                    </li>
+                    <li v-if="$store.state.user.role === 'admin'">
+                      <router-link
+                        to="/list-check-order"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >Check Order</router-link>
+                    </li>
+                    <li v-if="$store.state.user.role === 'admin'">
+                      <router-link
+                        to="/list-product"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >List Product</router-link
+                      >
+                    </li>
+                    <li v-if="$store.state.user.role === 'admin'">
+                      <router-link
+                        to="/add-product"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >Add Product</router-link
+                      >
+                    </li>
+                  </ul>
+              </div>
+            </li>
+            <li v-if="$store.state.user !== null && $store.state.user !== undefined">
               <button
                 @click="$store.dispatch('logout')"
                 to="/login"
@@ -122,11 +142,15 @@ export default {
   data() {
     return {
       showCart: false,
+      showDropdown: false,
     };
   },
   methods: {
     showCartLeft() {
       this.showCart = !this.showCart;
+    },
+    showDropdownClick() {
+      this.showDropdown = !this.showDropdown;
     },
   },
   setup() {
@@ -152,4 +176,17 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style lang="css">
+.li-parent-dropdown {
+  position: relative;
+}
+.ul-dropdown-absolute {
+  position: absolute;
+  top: calc(100% + 10px);
+  width: 170px;
+  left: -10%;
+  background: #fff;
+  box-shadow: 0 0 4px 1px #efefef;
+  border-radius: 5px;
+}
+</style>

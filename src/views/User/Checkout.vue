@@ -146,7 +146,7 @@
                         class="inline-block w-1 h-1 rounded-full p-2 border border-gray-200 ml-2"
                       ></span
                       >, Price:
-                      {{ $helpers.formatPrice(item.price * item.quantity) }}
+                      ${{ $helpers.formatPrice(item.price * item.quantity) }}
                     </p>
                   </div>
                 </li>
@@ -183,7 +183,7 @@ import { useRouter } from "vue-router";
 import CartService from "@/services/CartService";
 
 import { notify } from "notiwind";
-import AuthService from "../services/AuthService";
+import AuthService from "@/services/AuthService";
 
 export default {
   mounted() {
@@ -191,7 +191,7 @@ export default {
   },
   setup() {
     const total = ref(0);
-    const orderInfo = ref([]);
+    const orderInfo = ref({});
     const carts = CartService.getCart();
     const user = AuthService.getCurentUser();
     const dataCheckout = ref(
@@ -208,6 +208,7 @@ export default {
 
     const orderSubmit = async () => {
       orderInfo.value.user_id = user.user_id;
+      orderInfo.value.status = "Pending";
       orderInfo.value.orderItem = dataCheckout.value;
       try {
         await OrderService.create(orderInfo.value);

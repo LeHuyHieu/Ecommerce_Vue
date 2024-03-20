@@ -1,63 +1,26 @@
-import { ref, child, get, query, orderByKey, limitToLast } from "firebase/database";
-import { database } from "../firebase";
-import {DB} from "./db";
+import { collection, getDocs, where, query } from "firebase/firestore";
+import {Firestore_DB} from "./firestore_db";
+import { firestore } from "@/firebase";
 
-class OrderService extends DB{
+class OrderService extends Firestore_DB{
     constructor() {
         super("/orders");
     }
 
-    getAll() {
-        return get(this.db).then((snapshot) => {
-            const products = [];
-            snapshot.forEach((childSnapshot) => {
-                const product = childSnapshot.val();
-                product.key = childSnapshot.key;
-                products.push(product);
+    getUserOrder = async (id) => {
+        try {
+            const orderRef = collection(firestore, 'orders');
+            const q = query(orderRef, where('user_id', '==', id));
+            const querySnapshot = await getDocs(q);
+            let userOrderData = [];
+            
+            querySnapshot.forEach((doc) => {
+                userOrderData.push(doc.data());
             });
-            return products;
-        }).catch((error) => {
-            console.error("Error getting data:", error);
-            throw error;
-        });
-    }
-
-    get(key) {
-        const productRef = child(ref(database), 'products/' + key);
-        return get(productRef).then((snapshot) => {
-            if (snapshot.exists()) {
-                const productData = snapshot.val();
-                productData.key = snapshot.key;
-                return productData;
-            } else {
-                throw new Error('Product not found');
-            }
-        }).catch((error) => {
-            console.error("Error getting product data:", error);
-            throw error;
-        });
-    }
-
-    deleteMultiple(keys) {
-        const promises = keys.map(key => this.delete(key));
-        return Promise.all(promises);
-    }
-
-    getHomeLimitProducts() {
-        const sortedQuery = query(this.db, orderByKey(), limitToLast(8));
-
-        return get(sortedQuery).then((snapshot) => {
-            const products = [];
-            snapshot.forEach((childSnapshot) => {
-                const product = childSnapshot.val();
-                product.key = childSnapshot.key;
-                products.push(product);
-            });
-            return products.reverse();
-        }).catch((error) => {
-            console.error("Error getting last six products:", error);
-            throw error;
-        });
+            return userOrderData;
+        } catch (error) {
+            console.log(error.message);
+        }
     }
 }
 

@@ -29,10 +29,8 @@ class AuthService {
             let userData = null;
             
             querySnapshot.forEach((doc) => {
-                console.log(doc.id, " => ", doc.data());
                 userData = doc.data();
             });
-            console.log('login successful', userData);
             return userData;
         } catch (error) {
             console.log(error.message);

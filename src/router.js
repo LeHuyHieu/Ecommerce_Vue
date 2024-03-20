@@ -17,7 +17,7 @@ const routes = [
   {
     path: "/cart",
     name: "cart",
-    component: () => import("./views/CartPage.vue")
+    component: () => import("./views/User/CartPage.vue")
   },
   {
     path: "/checkout",
@@ -25,7 +25,23 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-    component: () => import("./views/Checkout.vue")
+    component: () => import("./views/User/Checkout.vue")
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    meta: {
+      requiresAuth: true
+    },
+    component: () => import("./views/User/Profile.vue")
+  },
+  {
+    path: "/list-order",
+    name: "list-order",
+    meta: {
+      requiresAuth: true
+    },
+    component: () => import("./views/User/ListOrder.vue")
   },
   {
     path: "/list-product",
@@ -34,7 +50,7 @@ const routes = [
       requiresAuth: true,
       requiresRole: "admin"
     },
-    component: () => import("./views/products/HomeProduct")
+    component: () => import("./views/Admin/products/HomeProduct")
   },
   {
     path: "/add-product",
@@ -43,7 +59,7 @@ const routes = [
       requiresAuth: true,
       requiresRole: "admin"
     },
-    component: () => import("./views/products/Create.vue")
+    component: () => import("./views/Admin/products/Create.vue")
   },
   {
     path: "/edit-product/:id",
@@ -52,7 +68,25 @@ const routes = [
       requiresAuth: true,
       requiresRole: "admin"
     },
-    component: () => import("./views/products/Edit.vue")
+    component: () => import("./views/Admin/products/Edit.vue")
+  },
+  {
+    path: "/list-check-order",
+    name: "list-check-order",
+    meta: {
+      requiresAuth: true,
+      requiresRole: "admin"
+    },
+    component: () => import("./views/Admin/ListCheckOrder.vue")
+  },
+  {
+    path: "/view-item-order/:id",
+    name: "view-item-order",
+    meta: {
+      requiresAuth: true,
+      requiresRole: "admin"
+    },
+    component: () => import("./views/Admin/ViewItemOrder.vue")
   },
   {
     path: "/register",
