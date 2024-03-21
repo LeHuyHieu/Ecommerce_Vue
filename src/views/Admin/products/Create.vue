@@ -142,8 +142,9 @@ export default {
       try {
         if (selectFile.value) {
           const timestamp = Date.now();
+          //rename image 
           const uniqueFileName = `${timestamp}_${selectFile.value.name}`;
-          const storageRef = firebaseRef(storage,"images/" + uniqueFileName);
+          const storageRef = firebaseRef(storage,"images/" + uniqueFileName); // lưu đường dẫn
           await uploadBytes(storageRef, selectFile.value);
           console.log("Upload file successfully");
           const imageUrl = await getDownloadURL(storageRef);

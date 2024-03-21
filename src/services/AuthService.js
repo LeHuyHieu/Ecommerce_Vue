@@ -29,7 +29,7 @@ class AuthService {
             let userData = null;
             
             querySnapshot.forEach((doc) => {
-                userData = doc.data();
+                userData = {id: doc.id, ...doc.data()};
             });
             return userData;
         } catch (error) {
