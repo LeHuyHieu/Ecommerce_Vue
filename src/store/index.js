@@ -4,6 +4,7 @@ import AuthService from "@/services/AuthService"
 import { auth } from "@/firebase"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
 import { notify } from "notiwind";
+import bcrypt from 'bcryptjs';
 
 const alerts = (type, title, desc) => {
     notify(
@@ -20,7 +21,8 @@ const alerts = (type, title, desc) => {
 
 export default createStore({
     state: {
-        user: [],
+        user: JSON.parse(localStorage.getItem('user')) || [],
+        currentUser: JSON.parse(localStorage.getItem('currentUser')) || null,
         cartCount: 0,
         carts: JSON.parse(localStorage.getItem('carts')) || [],
         totalCart: 0,
@@ -28,6 +30,10 @@ export default createStore({
     mutations: {
         SET_USER(state, user) {
             state.user = user
+        },
+
+        SET_CURRENT_USER(state, current_user) {
+            state.currentUser = current_user;
         },
 
         CLEAR_USER(state) {
@@ -58,8 +64,9 @@ export default createStore({
                 await signInWithEmailAndPassword(auth, email, password)
                 const user = await AuthService.getUser(auth.currentUser.uid)
                 localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('currentUser', JSON.stringify(auth.currentUser));
                 commit('SET_USER', user);
-                console.log(user);
+                commit('SET_CURRENT_USER', auth.currentUser);
                 alerts('success', 'Success', 'Đăng nhập thành công.')
                 router.push('/')
             } catch (err) {
@@ -88,9 +95,13 @@ export default createStore({
                     role: "user", 
                     user_id: userId,
                 };
-                AuthService.create(email, name, userId);
-                commit('SET_USER', auth.currentUser);
+                const salt = bcrypt.genSaltSync(10);
+                const hashedPassword = bcrypt.hashSync(password, salt);
+                AuthService.create(email, name, userId, hashedPassword);
                 localStorage.setItem('user', JSON.stringify(newUser));
+                localStorage.setItem('currentUser', JSON.stringify(auth.currentUser));
+                commit('SET_USER', newUser);
+                commit('SET_CURRENT_USER', auth.currentUser);
                 alerts('success', 'Success', 'Đăng ký thành công.')
                 router.push('/')
             } catch (err) {
@@ -117,7 +128,9 @@ export default createStore({
         async logout({ commit }) {
             await signOut(auth)
             commit('CLEAR_USER')
+            commit('SET_CURRENT_USER', null);
             localStorage.removeItem('user');
+            localStorage.removeItem('currentUser'); 
             router.push('/login')
         },
 
@@ -126,13 +139,22 @@ export default createStore({
             auth.onAuthStateChanged(async user => {
                 if (user === null) {
                     commit('CLEAR_USER')
+                    commit('SET_CURRENT_USER', null);
                     localStorage.removeItem('user');
+                    localStorage.removeItem('currentUser'); 
                 } else {
-                    const userData = await AuthService.getUser(user.uid);
-                    commit('SET_USER', userData)
-                    localStorage.setItem('user', JSON.stringify(userData));
-                    if (router.isReady() && (router.currentRoute.value.path === '/login' || router.currentRoute.value.path === '/register')) {
-                        router.push('/')
+                    try {
+                        const userData = await AuthService.getUser(user.uid);
+                        localStorage.setItem('user', JSON.stringify(userData));
+                        localStorage.setItem('currentUser', JSON.stringify(auth.currentUser));
+                        commit('SET_USER', user)
+                        commit('SET_CURRENT_USER', auth.currentUser);
+                        if (router.isReady() && (router.currentRoute.value.path === '/login' || router.currentRoute.value.path === '/register')) {
+                            router.push('/')
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alerts('error', 'Error', 'Có sự cố sảy ra khi tải dữ liệu người dùng.');
                     }
                 }
             })

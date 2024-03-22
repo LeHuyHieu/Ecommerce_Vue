@@ -1,18 +1,24 @@
-import { firestore } from "../firebase";
+import { firestore } from "@/firebase";
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { Firestore_DB } from "./firestore_db";
 
-class AuthService {
+class AuthService extends Firestore_DB {
+    constructor() {
+        super("/users");
+    }
+
     getCurentUser() {
         let user = JSON.parse(localStorage.getItem('user'));
 
         return user;
     }
 
-    create = async (email, name, id) => {
+    create = async (email, name, id, password) => {
         await addDoc(collection(firestore, "users"), {
             name: name,
             email: email,
             user_id: id,
+            password: password,
             role: "user"
         }).then(() => {
             console.log('successfully added');

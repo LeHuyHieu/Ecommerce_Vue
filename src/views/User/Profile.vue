@@ -30,28 +30,13 @@
                   <div class="sm:col-span-3">
                     <label
                       class="block text-sm font-medium leading-6 text-gray-900"
-                      >First name</label
+                      >Full name</label
                     >
                     <div class="mt-2">
                       <input
                         type="text"
-                        v-model="userData.first_name"
+                        v-model="userData.name"
                         placeholder="Hieu"
-                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="sm:col-span-3">
-                    <label
-                      class="block text-sm font-medium leading-6 text-gray-900"
-                      >Last name</label
-                    >
-                    <div class="mt-2">
-                      <input
-                        type="text"
-                        v-model="userData.last_name"
-                        placeholder="Le Huy"
                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -70,7 +55,7 @@
                       />
                     </div>
                   </div>
-                  <div class="sm:col-span-3">
+                  <div class="col-span-full">
                     <label
                       class="block text-sm font-medium leading-6 text-gray-900"
                       >Address</label
@@ -113,7 +98,7 @@
 </template>
 <script>
 import MenuLeftProfile from "@/components/layouts/MenuLeftProfile.vue";
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import AuthService from '@/services/AuthService';
 import router from "@/router";
 import { notify } from "notiwind"
@@ -132,6 +117,11 @@ export default {
     const imageUrl = ref(null); 
     const userData = ref({});
     const getUserData = ref(AuthService.getCurentUser());
+
+    const fetchData = async () => {
+      userData.value = await AuthService.getUser(getUserData.value.user_id);
+      // console.log(userData.value);
+    }
     
     const handleFileUpLoad = (e) => {
       const file = e.target.files[0];
@@ -158,10 +148,6 @@ export default {
     const updateProfile = async () => {
       const userId = getUserData.value.user_id;
       const user = await AuthService.getUser(userId);
-      //update avatar
-
-      //update profile
-
       console.log('key: ', user.id); 
       console.log('user id ', userId);
       try {
@@ -179,16 +165,20 @@ export default {
         console.log("Created new item successfully!");
         notify({
           group: "foo",
-          title: "Create",
+          title: "Update",
           position: "top-center", 
           type: "success",
-          text: "Created new item successfully"
+          text: "Update profile successfully"
         }, 3000);
-        router.push('/list-product');
+        router.push('/profile');
       } catch (error) {
         console.error(error);
       }
     }
+
+    onMounted(async () => {
+      await fetchData();
+    })
 
     return {
       userData,

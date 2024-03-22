@@ -24,7 +24,7 @@
     </li>
     <li class="w-11/12">
       <router-link
-        to="/profile"
+        to="/change-password"
         class="inline-flex hover:text-gary-700 items-center px-4 py-3 text-gray-700 bg-gray-50 rounded-lg w-full dark:bg-gray-50"
         aria-current="page"
       >

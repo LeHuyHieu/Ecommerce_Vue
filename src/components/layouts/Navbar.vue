@@ -83,20 +83,20 @@
                     <li>
                       <router-link to="/list-order" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">List Order</router-link>
                     </li>
-                    <li v-if="$store.state.user.role === 'admin'">
+                    <li v-if="role === 'admin'">
                       <router-link
                         to="/list-check-order"
                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                         >Check Order</router-link>
                     </li>
-                    <li v-if="$store.state.user.role === 'admin'">
+                    <li v-if="role === 'admin'">
                       <router-link
                         to="/list-product"
                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                         >List Product</router-link
                       >
                     </li>
-                    <li v-if="$store.state.user.role === 'admin'">
+                    <li v-if="role === 'admin'">
                       <router-link
                         to="/add-product"
                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -134,6 +134,7 @@
 import { useStore } from "vuex";
 import { onBeforeMount, onMounted,computed } from "vue";
 import CartService from "@/services/CartService";
+import AuthService from "@/services/AuthService";
 
 import CartLeft from "./CartLeft.vue";
 
@@ -160,18 +161,22 @@ export default {
 
     const carts = computed(() => CartService.getCart());
 
+    const role = computed(() => store.state.user.role || AuthService.getCurentUser().role);
+
     onBeforeMount(() => {
       store.dispatch("fetchUser");
     });
 
     onMounted(() => {
       cartCount.value = CartService.getCart().length;
+      console.log(store.state.user.role);
     })
 
     return {
       user: store.state.user,
       cartCount,
       carts,
+      role
     };
   },
 };
