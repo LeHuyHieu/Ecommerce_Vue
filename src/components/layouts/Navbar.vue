@@ -161,7 +161,7 @@ export default {
 
     const carts = computed(() => CartService.getCart());
 
-    const role = computed(() => store.state.user.role || AuthService.getCurentUser().role);
+    const role = computed(() => store.state.user?.role || AuthService.getCurentUser()?.role);
 
     onBeforeMount(() => {
       store.dispatch("fetchUser");

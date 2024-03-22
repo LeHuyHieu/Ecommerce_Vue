@@ -70,7 +70,7 @@
   import MenuLeftProfile from "@/components/layouts/MenuLeftProfile.vue";
   import AuthService from "@/services/AuthService";
   import { getAuth, updatePassword } from "firebase/auth";
-  import { onMounted, ref } from 'vue';  
+  import { onMounted, ref, computed } from 'vue';  
   import bcrypt from 'bcryptjs';
   import { notify } from "notiwind";
 
@@ -80,68 +80,64 @@
       const old_user = AuthService.getCurentUser();
       let storedUser = localStorage.getItem('currentUser');
       const auth = getAuth();
-      let user = ref(null);
+      let user = ref(computed(() => auth.currentUser || (storedUser ? JSON.parse(storedUser) : null)));
       const password = ref({});
       
       onMounted(async () => {
         user.value = await auth.currentUser || (storedUser ? JSON.parse(storedUser) : null);
-        await console.log(user);
       })
+      console.log(user.value);
 
       const changePassword = async () => {
         const salt = bcrypt.genSaltSync(10);//mã muối
-        if (user.value) { 
-          if (bcrypt.compareSync(password.value.old_password, old_user.password)) {
-            console.log('password changed successfully');
-            if (password.value.new_password === password.value.confirm_password) {
-                await updatePassword(user.value, password.value.new_password).then(() => {
-                console.log('update successful');
-      
-                AuthService.update(old_user.id, {password: bcrypt.hashSync(password.value.new_password, salt)});
-                old_user.password = bcrypt.hashSync(password.value.new_password, salt);
-                console.log(old_user);
-                localStorage.setItem('user', JSON.stringify(old_user));
-                password.value = {}
+        if (bcrypt.compareSync(password.value.old_password, old_user.password)) {
+          console.log('password changed successfully');
+          if (password.value.new_password === password.value.confirm_password) {
+            await updatePassword(user.value, password.value.new_password).then(() => {
+              console.log('update successful');
+    
+              AuthService.update(old_user.id, {password: bcrypt.hashSync(password.value.new_password, salt)});
+              old_user.password = bcrypt.hashSync(password.value.new_password, salt);
+              console.log(old_user);
+              localStorage.setItem('user', JSON.stringify(old_user));
+              password.value = {}
 
-                notify(
-                  {
-                      group: "foo",
-                      title: "Info",
-                      position: "top-center",
-                      type: "info",
-                      text: "Cập nhật mật khẩu thành công.",
-                  },
-                  3000
-                );
-              }).catch((error) => {
-                console.error(error.message);
-              });
-            }else {
               notify(
                 {
                     group: "foo",
-                    title: "Warning",
+                    title: "Info",
                     position: "top-center",
-                    type: "warning",
-                    text: "Xác nhận mật khẩu không đúng.",
+                    type: "info",
+                    text: "Cập nhật mật khẩu thành công.",
                 },
                 3000
               );
-            }
+            }).catch((error) => {
+              console.error(error.message);
+            });
           }else {
             notify(
-                {
-                    group: "foo",
-                    title: "Warning",
-                    position: "top-center",
-                    type: "warning",
-                    text: "Mật khẩu cũ sai.",
-                },
-                3000
+              {
+                  group: "foo",
+                  title: "Warning",
+                  position: "top-center",
+                  type: "warning",
+                  text: "Xác nhận mật khẩu không đúng.",
+              },
+              3000
             );
           }
         }else {
-          console.error("No user logged in. Password change unavailable.");
+          notify(
+              {
+                  group: "foo",
+                  title: "Warning",
+                  position: "top-center",
+                  type: "warning",
+                  text: "Mật khẩu cũ sai.",
+              },
+              3000
+          );
         }
       }
 
